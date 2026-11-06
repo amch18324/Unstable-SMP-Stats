@@ -3,7 +3,7 @@ on: [workflow_dispatch]
 
 jobs:
   build:
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -30,15 +30,17 @@ jobs:
             unzip img.zip -d myapp/www/
           fi
 
-      - name: Build Unsigned iOS App
+      - name: Build Unsigned iOS Simulator Framework
         run: |
           cd myapp
-          cordova build ios --device --codeSignIdentity="-" --developmentTeam="-"
+          # Force build target to use the simulator platform config, bypassing hardware signing locks
+          cordova build ios --emulator --codeSignIdentity="-" --developmentTeam="-"
 
       - name: Package into IPA
         run: |
           mkdir -p Payload
-          cp -r myapp/platforms/ios/build/device/MyApp.app Payload/
+          # Target simulator build directory paths
+          cp -r myapp/platforms/ios/build/emulator/MyApp.app Payload/
           zip -r MyApp.ipa Payload
 
       - name: Upload IPA Artifact
