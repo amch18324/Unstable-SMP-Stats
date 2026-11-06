@@ -1,3 +1,19 @@
-- name: Inject API Key
-  run: |
-    sed -i "s/LIVECONTAINER_KEY_PLACEHOLDER/${{ secrets.LIVECONTAINER_KEY }}/g" index.html
+name: Build IPA
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Inject API Key
+        run: |
+          sed -i "s/LIVECONTAINER_KEY_PLACEHOLDER/${{ secrets.LIVECONTAINER_KEY }}/g" index.html
+
+      # Your existing steps that zip or build the .ipa go here,
+      # AFTER the Inject API Key step.
