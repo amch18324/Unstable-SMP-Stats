@@ -1,0 +1,3 @@
+- name: Inject API Key
+  run: |
+    sed -i "s/LIVECONTAINER_KEY_PLACEHOLDER/${{ secrets.LIVECONTAINER_KEY }}/g" index.html
