@@ -30,24 +30,37 @@ jobs:
             unzip img.zip -d myapp/www/
           fi
 
-      - name: Build Unsigned iOS Simulator Framework
+      - name: Prepare iOS Project Structures
         run: |
           cd myapp
-          cordova build ios --emulator --codeSignIdentity="-" --developmentTeam="-"
+          cordova prepare ios
 
-      - name: Package into IPA via Deep Scan
+      - name: Compile Unsigned Hardware Binary via Xcode Direct
+        run: |
+          cd myapp/platforms/ios
+          # Run xcodebuild manually to explicitly force code signing off for real iOS device architectures
+          xcodebuild -workspace App.xcworkspace \
+                     -scheme App \
+                     -configuration Debug \
+                     -sdk iphoneos \
+                     CODE_SIGNING_ALLOWED=NO \
+                     CODE_SIGNING_REQUIRED=NO \
+                     CODE_SIGN_IDENTITY="" \
+                     PROVISIONING_PROFILE_SPECIFIER=""
+
+      - name: Package into Device IPA via Deep Scan
         run: |
           mkdir -p Payload
           
-          # Automatically search the full workspace folder to find where Xcode compiled the .app payload
+          # Locates the compiled physical iOS architecture bundle folder
           APP_PATH=$(find myapp/platforms/ios -name "*.app" -type d | head -n 1)
           
           if [ -z "$APP_PATH" ]; then
-            echo "Error: Could not locate compiled application file anywhere in workspace structure."
+            echo "Error: Could not locate compiled device binary package file."
             exit 1
           fi
           
-          echo "Found application bundle layout path at: $APP_PATH"
+          echo "Found hardware package layout path at: $APP_PATH"
           cp -r "$APP_PATH" Payload/
           zip -r MyApp.ipa Payload
 
