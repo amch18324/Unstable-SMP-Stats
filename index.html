@@ -446,7 +446,7 @@ const age=d=>Math.max(1,Math.floor((Date.now()-Date.parse(d+"T00:00:00Z"))/864e5
 let CH={};
 const LS=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},SV=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
 let OV=LS("ov",{});
-const KEY=(window.location.protocol==="file:"||window.location.hostname==="localhost")?"LIVECONTAINER_KEY_PLACEHOLDER":"AIzaSyATsrn-u8woPcOL9jaIVOGCr44XWlXUsOQ";const PL="PLkHqFlg8GA8YHnj1dapA4yIuU_W9m5XvC";
+const KEY=(location.hostname.endsWith("pages.dev")||location.hostname.endsWith("netlify.app"))?"AIzaSyATsrn-u8woPcOL9jaIVOGCr44XWlXUsOQ":"LIVECONTAINER_KEY_PLACEHOLDER";
 
 // Theme & Font persistence
 const currentTheme=LS("theme","dark");
