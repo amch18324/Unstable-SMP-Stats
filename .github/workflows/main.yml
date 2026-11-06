@@ -26,6 +26,10 @@ jobs:
         run: |
           sed -i '' "s/LIVECONTAINER_KEY_PLACEHOLDER/${{ secrets.LIVECONTAINER_KEY }}/g" index.html
 
+      - name: Verify key injected
+        run: |
+          grep -c "PLACEHOLDER" index.html || true
+          grep -o 'KEY=.*' index.html | head -c 200
 
       - name: Copy All Assets and Folders into App
         run: |
