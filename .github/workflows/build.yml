@@ -38,11 +38,12 @@ jobs:
       - name: Compile Unsigned Hardware Binary via Xcode Direct
         run: |
           cd myapp/platforms/ios
-          # Run xcodebuild manually to explicitly force code signing off for real iOS device architectures
+          # Added CONFIGURATION_BUILD_DIR to lock down the exact file destination path
           xcodebuild -workspace App.xcworkspace \
                      -scheme App \
                      -configuration Debug \
                      -sdk iphoneos \
+                     CONFIGURATION_BUILD_DIR="$(pwd)/build/Device" \
                      CODE_SIGNING_ALLOWED=NO \
                      CODE_SIGNING_REQUIRED=NO \
                      CODE_SIGN_IDENTITY="" \
@@ -53,7 +54,7 @@ jobs:
           mkdir -p Payload
           
           # Locates the compiled physical iOS architecture bundle folder
-          APP_PATH=$(find myapp/platforms/ios -name "*.app" -type d | head -n 1)
+          APP_PATH=$(find myapp/platforms/ios/build/Device -name "*.app" -type d | head -n 1)
           
           if [ -z "$APP_PATH" ]; then
             echo "Error: Could not locate compiled device binary package file."
