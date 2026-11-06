@@ -1,0 +1,53 @@
+name: Build LiveContainer IPA
+on: [workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Cordova
+        run: npm install -g cordova
+
+      - name: Create Project
+        run: |
+          cordova create myapp com.example.myapp MyApp
+          cd myapp
+          cordova platform add ios
+
+      - name: Copy All Assets and Folders into App
+        run: |
+          # Clean default template files
+          rm -rf myapp/www/*
+          
+          # 1. Copy all loose files from root (index.html, js, pngs, txt, xml, webmanifest)
+          find . -maxdepth 1 -type f ! -name "README.md" ! -name ".gitignore" ! -name "img.zip" -exec cp {} myapp/www/ \;
+          
+          # 2. If img.zip exists, unzip it directly into the web folder
+          if [ -f img.zip ]; then
+            unzip img.zip -d myapp/www/
+          fi
+
+      - name: Build Unsigned iOS App
+        run: |
+          cd myapp
+          cordova build ios --device --codeSignIdentity="-" --developmentTeam="-"
+
+      - name: Package into IPA
+        run: |
+          mkdir -p Payload
+          cp -r myapp/platforms/ios/build/device/MyApp.app Payload/
+          zip -r MyApp.ipa Payload
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: livecontainer-ipa
+          path: MyApp.ipa
