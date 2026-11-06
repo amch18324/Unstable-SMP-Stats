@@ -1,0 +1,1683 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Unstable SMP Stats – every video, views, likes & IMDb ratings</title>
+    <meta name="google-site-verification" content="aqXEaY5X1RgkCqHpUMmbXZ92mgGYIeJgxFnJLkdld80" />
+    <meta name="google-site-verification" content="AAlmtrMbGR-bIj6iikxVlGGOVNF4MCZfuzo2Hjf6YiQ" />
+    <meta name="google-site-verification" content="NIFQBdEM_Rrzs_Z4D5-vWXdj_Qd13iEt4DXCmn53ZPI" />
+    <meta name="google-site-verification" content="EEvAw_xS-nDt-MrH7JtwaXc_EVyj1P1laZSRUnXZMY4" />
+    <meta name="description" content="Live stats for every Unstable SMP video by Spoke, Parrot, Wemmbu and FlameFrags: views, likes, runtime and IMDb ratings, split by creator and season.">
+    <link rel="canonical" href="https://unstablesmplive.pages.dev/">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://unstablesmplive.pages.dev/">
+    <meta property="og:title" content="Unstable SMP Stats – every video, views, likes & IMDb ratings">
+    <meta property="og:description" content="Live stats for every Unstable SMP video by Spoke, Parrot, Wemmbu and FlameFrags: views, likes, runtime and IMDb ratings, split by creator and season.">
+    <meta property="og:image" content="https://unstablesmplive.pages.dev/og.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Unstable SMP Stats – every video, views, likes & IMDb ratings">
+    <meta name="twitter:description" content="Live stats for every Unstable SMP video by Spoke, Parrot, Wemmbu and FlameFrags: views, likes, runtime and IMDb ratings, split by creator and season.">
+    <meta name="twitter:image" content="https://unstablesmplive.pages.dev/og.png">
+    <style>
+        :root{
+          --bg:#f8f9fa;--fg:#1c1c1e;--mu:#6b6b70;--card:#ffffff;--bd:#dcdce0;--ac:#4f46e5;
+          --spoke:#dc2626;--parrot:#d4b28c;--wemmbu:#581c87;--flame:#111827;
+          --font-family:system-ui,-apple-system,Segoe UI,sans-serif;
+          box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)
+        }
+        :root[data-theme="dark"]{
+          --bg:#0f0f12;--fg:#f3f3f6;--mu:#9a9aa3;--card:#18181c;--bd:#27272f;--ac:#8b85ff;
+          --parrot:#bfa078;--flame:#e5e7eb;
+        }
+        @media (prefers-color-scheme:dark){:root:not([data-theme]){--bg:#0f0f12;--fg:#f3f3f6;--mu:#9a9aa3;--card:#18181c;--bd:#27272f;--ac:#8b85ff}}
+        :root[data-theme="spoke"]{--bg:#0a0708;--fg:#f5f2f3;--mu:#b3a6ab;--card:#140e11;--bd:#392d37;--ac:#ff0401;--spoke:#ff0401}
+        :root[data-theme="parrot"]{--bg:#07181a;--fg:#efdfbb;--mu:#8fc3c6;--card:#0e2427;--bd:#1b4a4e;--ac:#51ebed;--parrot:#51ebed}
+        :root[data-theme="wemmbu"]{--bg:#0b0410;--fg:#f3e8ff;--mu:#c9a6e8;--card:#17091f;--bd:#3d1561;--ac:#9d1bdb;--wemmbu:#8800c5}
+        :root[data-theme="flamefrags"]{--bg:#0b0a07;--fg:#f4efdf;--mu:#a89d7e;--card:#15130b;--bd:#3a3112;--ac:#caa727;--flame:#caa727}
+        :root[data-theme="light"]{
+          --bg:#f8f9fa;--fg:#1c1c1e;--mu:#6b6b70;--card:#ffffff;--bd:#dcdce0;--ac:#4f46e5;
+        }
+
+        /* Custom Scrollbars */
+        *::-webkit-scrollbar{width:6px;height:6px}
+        *::-webkit-scrollbar-track{background:transparent}
+        *::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--mu) 35%,transparent);border-radius:99px}
+        *::-webkit-scrollbar-thumb:hover{background:var(--mu)}
+
+        html{scroll-padding-top:env(safe-area-inset-top,0px)}
+        body{margin:0;background:var(--bg);color:var(--fg);font:13.5px/1.45 var(--font-family);padding:16px;max-width:1200px;margin:auto;transition:font-family 0.2s ease,background 0.2s ease,color 0.2s ease}
+        h1{font-size:24px;margin:4px 0;letter-spacing:-0.5px}
+        h2{font-size:17px;margin:28px 0 10px;letter-spacing:-0.3px}
+        .mu{color:var(--mu);font-size:12.5px}
+        .g{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+        .k{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px 14px;box-shadow:0 2px 4px rgba(0,0,0,0.02);transition:transform .2s ease,box-shadow .2s ease;animation:slideUp .5s cubic-bezier(0.16, 1, 0.3, 1) both}
+        @keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+        .k:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,0.06)}
+        .k b{display:block;font-size:20px;font-variant-numeric:tabular-nums;letter-spacing:-0.5px}
+        .k span{font-size:11.5px;color:var(--mu)}
+        .w{border:1px solid var(--bd);border-radius:12px;background:var(--card);box-shadow:0 2px 8px rgba(0,0,0,0.02);overflow-x:auto}
+        
+        /* Table Layout for Desktop & Mobile */
+        table{border-collapse:collapse;width:100%;font-size:12px;table-layout:auto;min-width:850px}
+        th,td{padding:8px 10px;border-bottom:1px solid var(--bd);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        th:first-child,td:first-child,td.l,th.l{text-align:left}
+        td.l{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        th{background:var(--card);cursor:pointer;position:sticky;top:0;z-index:2;font-weight:600;font-size:11.5px;user-select:none;white-space:normal;line-height:1.25;vertical-align:bottom}
+        th:hover{color:var(--ac)}
+        tr.t td{font-weight:700;background:var(--card)}
+        
+        input{width:100%;padding:10px 14px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--fg);margin-bottom:12px;box-sizing:border-box;font:inherit}
+        button{padding:9px 16px;border:0;border-radius:10px;background:var(--ac);color:#fff;font:inherit;cursor:pointer;font-weight:500;transition:opacity .15s,transform .1s}
+        button:hover{opacity:0.95}
+        button:active{transform:scale(0.98)}
+        .tw{max-height:580px;overflow-y:auto}
+        [hidden]{display:none!important}
+        
+        header{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;justify-content:space-between;margin-bottom:16px}
+        .header-left{flex:1;min-width:280px}
+        .header-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+        
+        /* Uniform Button & Pill Shapes */
+        .pill, .header-actions button, .header-actions .pill-btn{
+          font-size:12px;
+          height:34px;
+          color:var(--fg);
+          background:var(--card);
+          border:1px solid var(--bd);
+          border-radius:99px;
+          padding:0 14px;
+          font-weight:500;
+          display:inline-flex;
+          align-items:center;
+          justify-content:center;
+          gap:6px;
+          white-space:nowrap;
+          box-sizing:border-box;
+          line-height:1;
+        }
+
+        /* Dropdown Menus */
+        .dropdown-wrap{position:relative;display:inline-block;padding-bottom:10px;margin-bottom:-10px}
+        .dropdown-menu{position:absolute;right:0;top:calc(100% - 4px);background:var(--card);border:1px solid var(--bd);border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,0.18);padding:6px;display:flex;flex-direction:column;gap:4px;z-index:100;opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity .15s ease,transform .15s ease;min-width:160px}
+        .dropdown-wrap:hover .dropdown-menu,.dropdown-wrap.open .dropdown-menu,.dropdown-menu:hover{opacity:1;transform:translateY(0);pointer-events:auto}
+        .dropdown-menu button{background:transparent;color:var(--fg);border:0;text-align:left;padding:7px 10px;border-radius:6px;font-size:12px;font-weight:400;width:100%;height:auto}
+        .dropdown-menu button:hover{background:color-mix(in srgb,var(--ac) 15%,transparent);color:var(--ac)}
+
+        nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;gap:8px;overflow-x:auto;padding:10px 0;background:var(--bg);margin-bottom:8px}
+        nav button{background:var(--card);color:var(--fg);border:1px solid var(--bd);white-space:nowrap}
+        nav button.on{background:var(--ac);color:#fff;border-color:var(--ac);box-shadow:0 2px 6px rgba(79,70,229,0.25)}
+        .note{font-size:12px;color:var(--mu);margin:8px 0}
+        footer{margin:32px 0 12px;border-top:1px solid var(--bd);padding-top:14px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;align-items:center}
+        .quick-links{display:flex;gap:14px;flex-wrap:wrap;font-size:12px}
+        .quick-links a{color:var(--ac);text-decoration:none;font-weight:500}
+        .quick-links a:hover{text-decoration:underline}
+        tr:nth-child(even) td{background:color-mix(in srgb,var(--card) 60%,transparent)}
+        
+        .badge{display:inline-block;padding:2px 6px;border-radius:4px;font-size:10.5px;font-weight:600;cursor:pointer;flex-shrink:0}
+        .badge{display:inline-flex;align-items:center;padding:3px 10px 3px 4px;border-radius:99px;font-size:12px;font-weight:600;background:var(--card);color:var(--fg);border:1px solid var(--bd);white-space:nowrap;cursor:pointer}
+        .tp{display:inline-flex;align-items:center;gap:6px;margin-right:8px;vertical-align:middle}
+        .tp img{width:18px;height:18px;border-radius:50%;object-fit:cover}
+        .item-corner{display:none;position:fixed;right:14px;bottom:14px;width:72px;height:72px;image-rendering:pixelated;cursor:pointer;z-index:50;opacity:.9;transform-origin:bottom right;transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .2s;animation:itemBob 3s ease-in-out infinite;filter:drop-shadow(0 4px 8px rgba(0,0,0,.35))}
+        .item-corner:hover{transform:scale(1.15) rotate(-8deg);opacity:1;animation-play-state:paused;filter:drop-shadow(0 8px 16px rgba(0,0,0,.5))}
+        .item-corner:active{transform:scale(1.08)}
+        @keyframes itemBob{0%,100%{translate:0 0}50%{translate:0 -3px}}
+        @media (prefers-reduced-motion:reduce){.item-corner{animation:none}}
+        :root[data-theme="wemmbu"] .item-corner.wemmbu,:root[data-theme="parrot"] .item-corner.parrot,:root[data-theme="flamefrags"] .item-corner.flamefrags,:root[data-theme="spoke"] .item-corner.spoke{display:block}
+        .badge img{width:20px;height:20px;border-radius:50%;margin-right:6px;object-fit:cover}
+        .pdot{display:inline-block;width:20px;height:20px;border-radius:50%;margin-right:6px;vertical-align:middle;flex:none}
+        
+        .thumb-cell{display:flex;align-items:center;gap:8px;overflow:hidden;width:100%}
+        .thumb-cell img{width:46px;height:26px;object-fit:cover;border-radius:3px;background:var(--bd);flex-shrink:0}
+        .thumb-cell a,td a,.clickable-title{color:inherit;text-decoration:none;font-weight:500;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:inline-block;vertical-align:middle;max-width:100%}
+        .thumb-cell a:hover,td a:hover,.clickable-title:hover{text-decoration:underline;color:var(--ac)}
+        
+        .news-banner{background:linear-gradient(135deg,var(--card),color-mix(in srgb,var(--ac) 12%,var(--card)));border:1px solid var(--bd);border-radius:12px;padding:12px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;gap:14px;box-shadow:0 2px 6px rgba(0,0,0,0.02)}
+        .news-banner b{color:var(--ac)}
+        .chart-container{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:16px;box-shadow:0 2px 6px rgba(0,0,0,0.02)}
+        .chart-container h3{margin:0 0 14px 0;font-size:15px;letter-spacing:-0.2px}
+        svg{width:100%;height:auto;overflow:visible}
+        section{animation:tabFade .25s ease-in-out}
+        @keyframes tabFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+        .chart-point{cursor:pointer;transition:r .15s ease;r:4px}
+        .chart-point:hover{r:7px;fill:var(--ac)}
+
+        #customTooltip {
+          position: fixed;
+          background: var(--card);
+          color: var(--fg);
+          border: 1px solid var(--bd);
+          padding: 6px 12px;
+          border-radius: 8px;
+          font-size: 12.5px;
+          font-weight: 500;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+          pointer-events: none;
+          z-index: 9999;
+          opacity: 0;
+          transform: translateY(4px);
+          transition: opacity 0.15s ease, transform 0.15s ease;
+          white-space: nowrap;
+          max-width: 380px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        #customTooltip.show {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        .quick-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;font-size:12.5px}
+        .quick-links a{display:inline-flex;align-items:center;gap:6px;color:var(--fg);text-decoration:none;font-weight:500;background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:6px 12px;transition:border-color .15s,color .15s}
+        .quick-links a:hover{border-color:var(--ac);color:var(--ac);text-decoration:none}
+        th,td{padding:10px 12px;overflow:visible;text-overflow:clip;white-space:nowrap}
+        #all{table-layout:fixed;min-width:1040px}
+        .rw table{table-layout:fixed;min-width:0;width:100%}
+        .rw td:nth-child(2),.rw th:nth-child(2){overflow:visible}
+        .rw td,.rw th{overflow:hidden}
+        .rw td:last-child,.rw th:last-child{overflow:visible}
+        .wt{display:inline-flex;align-items:center;justify-content:center;min-width:36px;min-height:36px;margin:-8px 0 -8px -6px;padding:0 4px;border-radius:9px;font-size:20px;line-height:1;cursor:pointer;vertical-align:middle;transition:background .15s,transform .1s}
+        .wt:hover{background:color-mix(in srgb,var(--ac) 18%,transparent)}
+        .wt:active{transform:scale(.9)}
+        .dropdown-menu{left:0;right:auto;min-width:180px}
+        @media (max-width:760px){table{min-width:640px;font-size:12.5px}}
+
+        /* v27: records fit their cards, no sideways scroll */
+        .rw td,.rw th{padding:8px 6px}
+        .rw td:first-child,.rw th:first-child{padding-left:8px}
+        .rw td:last-child,.rw th:last-child{padding-right:8px;text-align:right;white-space:normal;line-height:1.25}
+        .rw .badge{font-size:9.5px;padding:2px 5px}
+        /* v27: themed checkbox */
+        .cb{width:18px;height:18px;box-sizing:border-box;border:2px solid var(--mu);border-radius:5px;display:inline-block;position:relative;flex:none;transition:background .12s,border-color .12s}
+        .cb::after{content:"";position:absolute;left:4px;top:0;width:4px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg) scale(0);transition:transform .12s}
+        .wt:hover .cb{border-color:var(--ac)}
+        .wt.on .cb{background:var(--ac);border-color:var(--ac)}
+        .on .cb::after{transform:rotate(45deg) scale(1)}
+        .wt:focus-visible{outline:2px solid var(--ac);outline-offset:1px}
+        .wbtn{display:inline-flex;align-items:center;gap:8px}
+        .wbtn .cb{border-color:rgba(255,255,255,.85)}
+        .wbtn.on .cb{background:#fff;border-color:#fff}
+        .wbtn.on .cb::after{border-color:var(--ac)}
+        /* v27: progress */
+        .pk{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px 14px}
+        .pk b{display:block;font-size:20px;font-variant-numeric:tabular-nums;letter-spacing:-.5px}
+        .pk span{font-size:11.5px;color:var(--mu)}
+        .pb{height:8px;border-radius:99px;background:color-mix(in srgb,var(--mu) 22%,transparent);overflow:hidden;min-width:40px}
+        .pb>i{display:block;height:100%;background:var(--ac);border-radius:99px;transition:width .25s}
+        .pb.done>i{background:#22c55e}
+        .pr{display:grid;grid-template-columns:84px 1fr auto;gap:10px;align-items:center;margin:7px 0;font-size:12px}
+        table.pt{table-layout:fixed;min-width:0}
+        .pt td,.pt th{padding:8px 6px;white-space:normal;overflow:visible;line-height:1.3}
+        .pt th{cursor:default}.pt th:hover{color:inherit}
+        .pt td:first-child,.pt th:first-child{padding-left:10px}
+    @media (max-width:699px){#all th:nth-child(7),#all td:nth-child(7),#all th:nth-child(8),#all td:nth-child(8),#all col:nth-child(7),#all col:nth-child(8){visibility:collapse;width:0!important;padding:0!important}}
+
+.pt col:first-child{width:38%!important}
+@media (max-width:600px){.pt .badge{font-size:12px;padding:3px 8px 3px 4px;max-width:100%}.pt .badge img{width:20px;height:20px}.pt td,.pt th{padding:8px 4px}}
+</style><link rel="icon" type="image/x-icon" href="favicon.ico"><link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0f0f12">
+</head><body>
+<img class="item-corner wemmbu" src="img/wemmbu-mace.png" alt="" title="Go to Wemmbu" onclick="location.hash='#creator-Wemmbu'" onerror="this.remove()">
+<img class="item-corner parrot" src="img/parrot-spyglass.png" alt="" title="Go to Parrot" onclick="location.hash='#creator-Parrot'" onerror="this.remove()">
+<img class="item-corner flamefrags" src="img/flamefrags-netherite-sword.png" alt="" title="Go to FlameFrags" onclick="location.hash='#creator-FlameFrags'" onerror="this.remove()">
+<img class="item-corner spoke" src="img/spoke-bucket.png" alt="" title="Go to Spoke" onclick="location.hash='#creator-Spoke'" onerror="this.remove()">
+<div id="customTooltip"></div>
+<header>
+    <div class="header-left">
+        <h1>Unstable SMP</h1>
+        <p class="mu" style="margin:4px 0 0">Every Unstable SMP video from Spoke, Parrot, Wemmbu and FlameFrags: views, likes, runtime and IMDb ratings, by creator and season.</p>
+    </div>
+    <div class="header-actions">
+        <div id="srv" class="pill" hidden></div>
+        <div id="liveVisitorsPill" class="pill" hidden></div>
+        <div id="wtPill" class="pill" style="cursor:pointer" title="Watch progress" onclick="location.hash='#al'" hidden></div>
+        <div class="pill" style="cursor:pointer" onclick="randomEp()" title="Random episode">🎲 Random episode</div>
+        <div id="st" class="pill">Loading…</div>
+                <div class="dropdown-wrap">
+            <button class="pill-btn" aria-label="Theme Menu">🎨 Theme</button>
+            <div class="dropdown-menu">
+                <button onclick="setTheme('system')">🖥️ System Default</button>
+                <button onclick="setTheme('dark')">🌙 Dark Mode</button>
+                <button onclick="setTheme('light')">☀️ Light Mode</button>
+                <button onclick="setTheme('wemmbu')"><span class="tp" data-c="Wemmbu"></span>Wemmbu</button>
+                <button onclick="setTheme('parrot')"><span class="tp" data-c="Parrot"></span>Parrot</button>
+                <button onclick="setTheme('flamefrags')"><span class="tp" data-c="FlameFrags"></span>FlameFrags</button>
+                <button onclick="setTheme('spoke')"><span class="tp" data-c="Spoke"></span>Spoke</button>
+            </div>
+        </div>
+        <div class="dropdown-wrap">
+            <button class="pill-btn" aria-label="Font Menu">🔤 Font</button>
+            <div class="dropdown-menu">
+                <button onclick="setFont('system-ui,-apple-system,Segoe UI,sans-serif')">Modern Sans</button>
+                <button onclick="setFont('Courier New,monospace')">Code Monospace</button>
+                <button onclick="setFont('Georgia,serif')">Classic Serif</button>
+                <button onclick="setFont('Comic Sans MS,Rounded,sans-serif')">Playful Rounded</button>
+            </div>
+        </div>
+    </div>
+</header>
+<div id="newsBanner" class="news-banner" hidden>
+    <div>🔥 <b>Since your last visit:</b> <span id="newsText"></span></div>
+    <button id="dismissNews" style="padding:4px 8px;font-size:11.5px">Got it</button>
+</div>
+<nav id="tabs">
+    <button data-t="ov" class="on">Overview</button>
+    <button data-t="ch">Charts</button>
+    <button data-t="cr">Creators</button>
+    <button data-t="se">Seasons</button>
+    <button data-t="rc">Records</button>
+    <button data-t="arc">Arcs</button>
+    <button data-t="char">Characters</button>
+    <button data-t="al">All videos</button>
+</nav>
+
+<section id="p-ov"><div id="todayBanner" class="news-banner" hidden></div><div id="kpi" class="g" style="margin-top:12px"></div><div id="latestEp" style="margin:12px 0"></div><div id="homeGrid" class="g" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px;margin-bottom:12px"></div><div id="prog"></div><div style="margin:12px 0"><button onclick="shareCard()" style="background:var(--mu)">📸 Save my progress card</button></div><div id="onThisDay"></div></section>
+<section id="p-ch" hidden>
+    <h2>Visual Analytics & Interactive Charts</h2>
+    <div class="chart-container"><h3>Views Over Time (Hover points for details)</h3><div id="chartViewsTime"></div></div>
+    <div class="chart-container"><h3>Total Views by Creator</h3><div id="chartViewsCreator"></div></div><div class="chart-container"><h3>Creator Share of Total Views</h3><div id="chartCreatorPie"></div></div>
+    <div class="chart-container"><h3>Season vs Season Average Views</h3><div id="chartSeasonViews"></div></div>
+    <div class="chart-container"><h3>IMDb Rating vs Views Correlation</h3><div id="chartImdbViews"></div></div>
+    <div class="chart-container"><h3>Likes vs Views Correlation</h3><div id="chartLikesViews"></div></div>
+    <div class="chart-container"><h3>Upload heatmap</h3><div id="chartHeat" style="overflow-x:auto"></div></div>
+</section>
+<section id="p-cr" hidden><h2>By creator</h2><div class="w"><div id="cr"></div></div><h2>Your progress by creator</h2><div class="w"><div id="crP"></div></div></section>
+<section id="p-se" hidden>
+    <h2>By season</h2><div class="w"><div id="se"></div></div>
+    <div class="note">Seasons follow playlist order: S1 = videos 1–27, S2 = 28–115, S3 = 116 onward (new videos land in S3).</div>
+    <h2>Creator × season</h2><div class="w"><div id="mx"></div></div>
+    <div class="note">Each cell: videos · avg views · avg IMDb.</div>
+    <h2>Your progress by season</h2><div class="w"><div id="seP"></div></div>
+    <h2>Creator × season progress</h2><div class="w"><div id="mxP"></div></div>
+    <div class="note">Each cell: videos watched / total, and the percentage.</div>
+</section>
+<section id="p-rc" hidden><h2>Records</h2><div id="rec" class="g" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:12px"></div></section>
+<section id="p-al" hidden>
+    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+        <input id="q" placeholder="Filter by title or creator…" style="flex:1;margin-bottom:0">
+        <button id="unwBtn" onclick="toggleUnw()" style="background:var(--mu)">👁 Unwatched only</button>
+        <button onclick="exportCSV()" style="background:var(--mu)">📥 CSV</button>
+        <button onclick="exportJSON()" style="background:var(--mu)">{ } JSON</button>
+    </div>
+    <div id="qJump"></div>
+    <div id="wtTop"></div>
+    <div class="w tw"><table id="all"></table></div>
+    <div class="note">Tap a column header to sort. "–" means no IMDb rating yet.</div>
+</section>
+
+<!-- Creator Profile & Episode Detail Views -->
+<section id="p-arc" hidden><h2>Arcs</h2><div class="w" id="arcList"></div><h2>Trends</h2><div class="w" id="trendBox" style="padding:12px"></div></section>
+<section id="p-arcd" hidden><button onclick="location.hash='#arc'" style="margin-bottom:14px">← Back to Arcs</button><div id="arcDetail"></div></section>
+<section id="p-char" hidden><h2>Characters</h2><input id="chq" placeholder="Search characters" oninput="drawChars()" style="width:100%;box-sizing:border-box;padding:8px;margin-bottom:10px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);color:inherit"><div class="w" id="charList"></div></section>
+<section id="p-chard" hidden><button onclick="location.hash='#char'" style="margin-bottom:14px">← Back to Characters</button><div id="charDetail"></div></section>
+<section id="p-creator" hidden>
+    <button onclick="location.hash='#cr'" style="margin-bottom:14px">← Back to Creators</button>
+    <div id="creatorProfileContent"></div>
+</section>
+<section id="p-episode" hidden>
+    <button onclick="history.back()" style="margin-bottom:14px">← Back</button>
+    <div id="episodeProfileContent"></div>
+</section>
+
+<footer>
+    <div class="note" style="margin:0">Views and likes come from YouTube and refresh every 30 minutes. IMDb ratings are updated by hand. Fan-made, not affiliated with the creators.</div>
+    <div class="quick-links" id="quickLinks">
+        <a id="lkImdb" href="https://www.imdb.com/title/tt39289432/" target="_blank">🎬 IMDb Show Page ↗</a>
+        <a id="lkPlaylist" href="https://www.youtube.com/playlist?list=PLkHqFlg8GA8YHnj1dapA4yIuU_W9m5XvC" target="_blank">▶ Playlist ↗</a>
+        <a id="installLink" href="#" onclick="installApp(event)" hidden>📲 Install app</a>
+        <a id="lkDiscord" href="https://discord.gg/unstableevents" target="_blank">💬 Discord ↗</a>
+    </div>
+</footer>
+<script>(()=>{
+const esc=v=>String(v).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const C={S:"Spoke",P:"Parrot",W:"Wemmbu",F:"FlameFrags"};
+
+const DESCS = {
+  "How to Destroy the Unstable SMP": "When a Minecraft server begins glitching, Spoke and Jamato exploit illegal ancient artifacts to save their world. But as power corrupts and rivals close in, Spoke must choose between fixing the server or breaking it.",
+  "This Button Destroys the World": "Parrot investigates a massive crater and a hidden weapon while uncovering secrets about his allies in the Unstable Universe.",
+  "Breaking Into Minecraft's Most Illegal Vault": "When Wemmbu first meets Spoke, he suspects something shady. He goes through a small search on Spoke, stalking and following him. Eventually, he finds out Spoke is exploiting, but gets trapped into a very secure, and dangerous, prison.",
+  "How I Stole 10,356,000 Duped Items": "Millions of duped items have flooded the Unstable SMP, and as a result, the players have stashed the items in vaults all around the server. So, it's Spoke's job to destroy them all.",
+  "I Uncovered Minecraft's Greatest Secret": "As Parrot teams up with a player named Wifies they try uncovering Minecraft's greatest secret by completing several challenges that only the smartest players can do",
+  "It's Impossible to Catch this Player": "Wemmbu has to get revenge on Spoke, who tried trapping him in a prison. To catch him, Wemmbu has to ask help from a leader of a giant civilization.",
+  "I Broke into Minecraft's Most Secure Prison": "Trapped in the center of Minecraft's most secure prison is Parrot's best friend, and Parrot going to break him out.",
+  "I Created Minecraft's Greatest Civilization": "After receiving help from PrinceZam, Wemmbu repays the favor by founding a new empire under Zam's leadership. But as the empire rises, powerful enemies and betrayals put its future to the test.",
+  "It's Impossible to Find this Player": "ClownPierce sends Parrot and Wifies on a mission to obtain eight items while Boosfer tries to steal them.",
+  "Unstable SMP: The PrinceZam Empire War": "The time has come for Wemmbu to launch a full-scale attack on PrinceZam's Empire, however he runs into a large issue blocking his way and must forge a strong alliance to take down his nemesis for good.",
+  "How I Escaped Minecraft's Largest Prison": "After Wemmbu and PrinceZam used all their resources in their conflict, Clownpierce decided to imprison them, along with some of their friends, in an inescapable prison. Will they work together to escape, or continue their conflict?",
+  "I Built Minecraft's Safest Civilization": "A new group known as the Invisible Mafia, led by Ashswag, aim to destroy and conquer all civilizations on Unstable. Parrot and Wifies go to the outskirts of the end and build a civilization to defy Ashswag's rule.",
+  "I Infiltrated The Minecraft Mafia": "A massive faction known as the Invisible Mafia, lead by player Ashswag, is quickly rising in power and plans to rule over the entire server. So, Spoke and his friends make a plan.",
+  "Unstable SMP: The First War": "ParrotX2 joins the Warrior faction in the Far Lands civilization to fight The Mafia, navigates internal conflicts between warriors and farmers, and strives to unite the factions against a common enemy.",
+  "Unstable SMP: Doomsday": "ParrotX2 leads a resistance against the Invisible Mafia",
+  "Unstable SMP: The Mafia": "Wemmbu, after his home is destroyed by the Mafia, reluctantly allies with Parrot to gain the power needed for revenge, leading to a dangerous mission to dismantle the organization from within.",
+  "The End of the Minecraft Mafia": "Spoke and Mapicc, after uncovering the location of the Mafia's stasis chamber, launch a final mission to destroy it and free the server from Ash's control, forcing a confrontation.",
+  "Unstable SMP: After The Mafia": "After the defeat of the Mafia, Wemmbu and Eggchan move far away to live a peaceful life, however he is interrupted by a strong foe in pursuit of a challenge.",
+  "I Got Hunted by the World's Best Minecraft Player": "Minecraft's best player hunts down Parrot. Who sent him? No one knows. Parrot tries to survive ItzRealMe - A player ranked No.1 on MCTiers Leaderboard.",
+  "Unstable SMP: The Eggchan Empire": "Eggchan and Wemmbu monopolize Minecraft XP bottles on Unstable SMP, forcing weaker players to join their empire and creating chaos. The rise and fall of the Eggchan Empire.",
+  "I Spent 100 Days Hidden in a Secret Minecraft Base": "After the fall of the Invisible Mafia, Ashswag flees to a base far away. Spoke follows him, hoping to take whatever riches and find secrets buried deep inside a secret base.",
+  "I Explored a Deserted Minecraft Civilization": "Wemmbu and Eggchan are forced to take and ender pearl cannon to the great sea by Jaden and Theo, where they fight for their lives every second.",
+  "How I SURVIVED the Unstable SMP": "After Wemmbu returns to the mainland of the Unstable SMP, he has to navigate his way around the new, post-Mafia world to ensure the survival of him and his friend. Additionally, he seeks to rematch an enemy.",
+  "I Got Hunted by a Minecraft Hacker": "The Director hires the notorious hacker TruOriginal to hunt Parrot and BAT.",
+  "How I HUNTED the Unstable SMP": "Former Invis Mafia player Wyll_ is hired to hunt and ban Wemmbu for good.",
+  "How I DESTROYED the Unstable SMP": "Lopezz asks Wemmbu to help defend her civilization from a group of bandits.",
+  "Hunting a Minecraft Player Who Doesn't Exist": "Parrot, after being warned not to follow, relentlessly pursues the mysterious Director across the server, using spies and traps to uncover the hidden identity of the player who seems to be always one step ahead.",
+  "How I SURVIVED a Hardcore Minecraft Tournament": "Wemmbu enters a tournament featuring the strongest players on the Unstable SMP, in an attempt to prove himself against an old enemy.",
+  "Dominating Minecraft's Deadliest PVP Tournament": "FlameFrags joins a PVP tournament with strong players such as: Wemmbu, Theobaldthebird, FerreMC and others.",
+  "Escaping Paragon: The Perfect Minecraft Prison": "After a deep betrayal, Parrot is imprisoned in Paragon, a seemingly inescapable fortress, and must outwit his captor.",
+  "I Explored Beyond the Minecraft Farlands": "Wemmbu tries to meet with his best friend but instead encounters an enemy who robs him, forcing Wemmbu to follow the trail to the Farlands and beyond.",
+  "I Explored Beyond the Minecraft Fartherlands": "Wemmbu must continue chasing Sharpness into the Farlands to retrieve his mace. However, he is being hunted by the people he beat in his relentless pursuit of strength, led by one long-time rival.",
+  "I Explored to the END of the Minecraft Farlands": "Wemmbu and Eggchan go further into the Farlands, as the world in front of them starts to deteriorate, meanwhile mysterious players warn them to not venture any further.",
+  "Minecraft Combat Master VS Mace Pro": "After Flame betrays Jaden in the Farlands Jaden retaliates by sending the LAW after Flame.",
+  "I Explored Beyond the Minecraft Void": "Wemmbu reaches a mysterious civilization in void beyond the Farlands, where he is forced to avoid the eyes of the players living there in order to find 'The Forge', the source of immense power that Wemmbu desires.",
+  "Orbital Strike Cannon VS Unstable SMP": "Wemmbu is more powerful than ever, his strength greatly eclipsing every player in his way, as he relentlessly hunts down his enemies, including his arch-nemesis, FlameFrags.",
+  "I Faked My Death on a Hardcore Minecraft SMP": "Wemmbu wants a fresh start, and so he goes undercover with the help of his two closest friends. He experiences the world in a new light, free of his fame and his title. Yet he finds that he can't avoid fighting, a new enemy always appears.",
+  "I Secretly Joined My Enemy's Minecraft Team": "After Wemmbu reveals his identity to Boosfer and Boomie whilst trying to ban them. He travels to the great sea with his old enemy to ban Boosfer and Boomie.",
+  "How I \"DIED\" on a Hardcore Minecraft SMP": "After achieving everything on the server, Wemmbu discovers that things have gotten boring to him. It is then that an idea to get a new start crosses his and his friends' minds. Surely this can't go wrong.",
+  "I Escaped Minecraft's Forgotten Dimension": "Boosfer leads Wemmbu down into a void trap in the Nether, trying to kill them both. Only to find a hidden dimension beneath.",
+  "I Got Hunted By Minecraft's Smartest Player": "The conclusion of the False Identity Arc. Parrot is near certain of Wemmbu's identity, and he must deliver Wemmbu to his arch-nemesis, FlameFrags, in exchange for the location of a vital source of immense wealth and loot.",
+  "2 Minecraft Pros VS 1000 Players": "Wemmbu's identity has been revealed by Parrot and FlameFrags, who seeks to reclaim his title. They are interrupted as a new threat emerges, and the two rivals must join forces in their greatest challenge yet.",
+  "2 VS 1000 Player Minecraft War": "FlameFrags and Wemmbu fight an 1000 player war against the LAW's soldiers and leader LettuceK.",
+  "Finding the Tomb of the Minecraft Mafia": "Given coordinates by former Mafia Diamond player Flamefrags, Parrot and Theo search for the Invisible Mafia's tomb.",
+  "I Became a Prisoner on the Unstable SMP": "Wemmbu has been taken prisoner by LettuceK, as he encounters a myriad of old enemies, who he must work together with to escape his captivity, as the threat of execution looms near.",
+  "Escaping Prison on the Unstable SMP": "After being dragged around in prison and doing mindless jobs under LAW leader; LettuceK. Wemmbu agrees on SpokeIsHere's deal and escapes with his fellow inmates",
+  "I Secretly Got Trained By My Minecraft Killer": "To get better at PVP, Flame embarks on a training arc to train with best combat masters in Unstable SMP, and his first teacher is Swight, 3rd best player in all of the world, who's also tasked by Law to assassinate Flame.",
+  "I Joined a PIRATE CIVILIZATION in Minecraft": "Wemmbu and Eggchan, saved by Jaden and his pirates embark on a mission across the Great Sea to find a mysterious collector before the Law finds them, who could be last key for Law's total power over the pirates, and the server.",
+  "My Best Friend Died on the Unstable SMP": "After the disappearance of his best friend, Spoke is determined on getting him back.",
+  "I Secretly Teamed With My Minecraft Killer": "After passing the test by Swight to get a training from him, Flame and Swight go on multiple missions, all while Swight teaches him advanced combat techniques, however, soon enough, Swight starts to get suspicious of Flame's Identity.",
+  "Unstable SMP: The Battle for The Great Sea": "Wemmbu, Eggchan and Jaden leads the Pirates in a desperate assault to destroy the Law's orbital cannon, before it's too late.",
+  "I Got Trained By a Minecraft Spear Master": "FlameFrags must seek the training of an old friend if he is to take his revenge against LettuceK and the Law.",
+  "I Got Trained By the World's Best Minecraft Player": "Flame goes to the abandoned base of BAT to loot it, just to find ItzRealMe. The best Minecraft player in the world.",
+  "Breaking Hardcore Minecraft to Get Revenge": "Spoke continues to fight Leowook and the spy team with his friends Mapicc and PrinceZam.",
+  "2 Minecraft Pros VS 1000 Hunters": "To expose LettuceK about his sinister election campaign, Parrot finds Wemmbu to show the world that he's not captured by The Law, however, LettuceK will do anything to make sure Parrot never makes it back.",
+  "Minecraft Pro VS 1000 Players": "Wemmbu returns to the End, and seek help from his most trusted ally, MinuteTech, to help him return to overworld to end LettuceK's unjust rule on the server, all while facing multiple Law forces.",
+  "I Became King of the Unstable SMP": "After LettuceK becomes temporary king, Parrot is in peril as he needs to save his friend and his server.",
+  "4 Minecraft Pros VS 2500 Players": "Spoke joins the protagonists to make Parrot king and overthrow Law.",
+  "Unstable SMP: The LAW": "Wemmbu joins a coalition to kill LettuceK and free himself from his tyranny.",
+  "2500 Players VS Minecraft Combat Master": "FlameFrags returns to join a coalition of rivals in a final, massive battle to overthrow LettuceK's regime.",
+  "I Joined a 100,000 Player Minecraft Server": "After the defeat of the Law, Wemmbu is living relatively peacefully. But his need for some simple building blocks leads him to embark on a brief adventure to find a powerful weapon, all while someone is following him from the shadows.",
+  "100 Days as King of the Unstable SMP": "After becoming King of the Unstable SMP, Parrot receives harsh criticism from the people. In an order to prove himself, Parrot decides to rebuild and make Spawn a safe place for new players.",
+  "Minecraft Trapper VS Elite Bounty Hunters": "Spoke and ally JumperWho investigate Mapic's disappearance but find themselves targeted by a mysterious group hunting Spoke. He refuses capture and seeks to uncover their motives and possible connection to Mapic's vanishing.",
+  "I Joined the Minecraft LAW": "After the LAW tries to take his base away, FlameFrags decides to work for them and complete various tasks to pay off his debt and reclaim his base.",
+  "Minecraft Pro VS 1000 Player Civilization": "After a thousand-player civilization storms his base and takes his best friend hostage, one player must infiltrate their empire to get him back.",
+  "I Exposed a Corrupt Minecraft Civilization": "After opening up spawn, tons of new players began flooding into the Unstable SMP... heading to Capital City for a safe place to live. However, it wasn't long until parrot realized that the Capital City Police were up to something shady.",
+  "Searching for 100 Players Who Went Missing": "Thousands joined Unstable SMP, but some mysteriously vanished, including my best friend. When no one else would help, JumperWho and I set out to find the missing players and reunite with my lost friend.",
+  "I Explored the Minecraft Mist": "Under a mission from LAW, FlameFrags must investigate the dangerous and secluded Mist in search of a powerful combat master, Mistrul. However, things get complicated quickly as Flame involves his friend Lomedy.",
+  "Searching for a Civilization that Doesn't Exist": "Parrot's kingdom needs to expand to accommodate all of the new players. However, after going to check in on their most recent expedition, they find no one but a trail of clues that could explain how 1000 players simply stopped existing.",
+  "Searching For 1000 Players Who Went Missing": "Spoke and his friends embark on a dangerous mission into the mysterious Farlands to rescue kidnapped players from the enigmatic group Null, braving traps and unknown obstacles along everything.",
+  "1000 Players Simulate MIST War in Minecraft": "When Flamefrags's best friend, Lomedy, goes missing, he is determined to take his revenge on the players that took him.",
+  "I Got Hunted by the World's Deadliest Assassin": "Wemmbu and Egg evade a relentless invisible assassin across the Unstable SMP. Despite being kidnapped and facing dangerous skirmishes, Wemmbu remains determined to confront his hunter and find answers.",
+  "I Created the World's Largest Minecraft Army": "After finding out who the Cindercrest Army were, Parrot decides to go through many civilizations to build an army of his own",
+  "Finding 1000 Players Who Went Missing": "Spoke traverses the perilous Farlands with his friends in the hopes of rescuing thousands of missing players, all that while his ex-ally and current enemy JamatoP tries to lead them astray.",
+  "Searching For My Friend Who Went Missing": "Wemmbu searches for his missing friend, Eggchan, navigating betrayals, tense negotiations with rival factions, and high-stakes combat within the Unstable SMP to ultimately uncover the truth behind his disappearance.",
+  "I Joined a 10,000 Player Minecraft Army": "FlameFrags joins the Cinderest army to overthrow King Parrot and His Kingdom. Despite failed attempts to secure powerful orbital strike cannons and suffering major defeats, the group persists in their quest to Accomplish the Goal.",
+  "Unstable SMP: Civil War": "The UnstableSMP suffers a civil war where King Parrot fights Cindercrest to defend his Kingdom. The story follows the escalating tensions and strategic battles as these two sides clash over the future and resources of the kingdom.",
+  "1000 Players Simulate UNDERGROUND Civilization in Minecraft": "1000 players create a massive underground civilization in Minecraft. The story follows their survival, resource management, and social dynamics as they navigate a challenging world within the Unstable SMP server.",
+  "1000 Players Simulate PRISON in Hardcore Minecraft": "In the Unstable SMP, over 1000 players are trapped within a high-security hardcore Minecraft prison. Follow gripping narrative as they navigate dangerous environments, forge alliances, and plot a daring escape from Purgatory.",
+  "1000 VS 1000 Player Minecraft Civil War": "Unstable SMP faces a massive civil war between new and old players. The Protagonist explores complex alliances, power struggles, and the moral dilemmas of total warfare.",
+  "Unstable SMP: Civil War FINALE": "Tensions rise on the Unstable SMP as a civil war continues between new and old players. King Parrot fights to maintain his kingdom and protect his vision of inclusion.",
+  "I Went to WAR on a Hardcore Minecraft SMP": "Wemmbu navigates complex political betrayals and escalating conflicts within the Unstable SMP. Caught between warring factions, he must complete covert, high-stakes tasks while carefully manipulating his fragile standing and ensuring his survival.",
+  "1000 Players Simulate THE PURGE in Minecraft": "In this Minecraft simulation, 1000 players tries to survive and navigate a perilous \"purge\" event. Wemmbu fights to survive, avoid targeted elimination, and secure essential resources while exploring the world's depths.",
+  "I Became the Strongest on the Unstable SMP": "On the Unstable SMP, FlameFrags embarks on a high-stakes quest to track down his rival Wemmbu, hoping to prove his strength in an intense, tense showdown for supremacy.",
+  "How I Destroyed an Entire Minecraft Civilization": "On the Unstable SMP, After facing The Purge, Wemmbu rallies his allies to Assasinate The Ruler of Cave Civilization, Arachnid, and attempt to rescue His Best Friend \"Eggchan\" who is held hostage by \"The Wraith\" using Ender Pearl Stasis's",
+  "1000 Players Simulate HUNGER GAMES in Hardcore Minecraft": "On the Unstable SMP, Spoke and 1000 captives are trapped in a massive to compete in a isolated Minecraft Hunger Games arena, forced to fight for survival to earn freedom",
+  "I Got Hunted By the World's Deadliest Minecraft Player": "On the Unstable SMP, FlameFrags goes an a quest to Repair his destroyed base while facing repeated One on One battles against a Former Law Commander \"TheGODofWar,\" a skilled combat master seeking a rematch.",
+  "Unstable SMP: Purgatory": "On the Unstable SMP, Spoke returns to the Purgatory, The largest prison in the Unstable World, to gather an army of survivors. Facing off against Jamato, he leads a tense, high-stakes revolution to liberate over a thousand trapped players.",
+  "I Got Trained By a Minecraft Combat Master": "On the Unstable SMP, Flame teams up with \"TheG0dofWar\" a Fierceful Combat Master on a Training Quest. Together, They Attempt to Reclaim TheG0dofWar's Empire by Battling Formidable Opponents who Prioritize Unfair Special Power over Skill.",
+  "Minecraft's Best Players Simulate PVP Tournament": "On the Unstable SMP, FlameFrags enters a high-stakes combat tournament hosted on Warrior Island to prove their worth among the elite fighters. He faces off against various skilled opponents to get a rematch against Antagg.",
+  "1000 Players Build END Civilization in Hardcore Minecraft": "On the Unstable SMP, Spoke leads a 1000 Player Army in the End. However, They were trapped in the Dimension by \"MinuteTech\" who was an Old Friend of Spoke. Him and His army dominates everything in their Path to Achieve Freedom and Conquer.",
+  "I Built Minecraft's Most Advanced Civilization": "On the Unstable SMP, After being banished from Parrot's kingdom, He set thousands of blocks out to create a new civilization - A civilization that would one day be strong enough to defeat His biggest enemy, Saparata.",
+  "I Created Minecraft's Greatest Military": "On the UnstableSMP, Spoke leads Army of Null to invade the overworld and seize control of the server's strongholds. Mysterious threats challenge the rising power, causing intense conflict between Null and rival factions for total control.",
+  "I Exposed Minecraft's \"Strongest\" Player": "On the Unstable SMP, Flame joins a civilization dipped in conflicts with an opponent known for Strongest Player by Unfair Means. Through strategic decisions and tense atmosphere, Flame attempts challenge Antagg and beat him by true skill",
+  "1000 Players Simulate Mining Prison in Minecraft": "On the Unstable SMP, Parrot faces a perimeter Nether Prison controlled by ClownPierce, where survival depends on mining ancient debris's. After forming a team of fellow Captives, Parrot orchestrates a daring escape from the Mining Prison",
+  "Exploring Minecraft's Forgotten Dimension": "On the Unstable SMP, Spoke descends beneath the nether dimension into a mysterious void world. He must navigate through perilous landscapes and puzzle-filled chambers with his former Best Friend to uncover the secrets of this lost world.",
+  "Searching for a Vault that Doesn't Exist": "On the Unstable SMP, FlameFrags joins a mission to locate a mysterious vault hidden by the founder of the Windgrove civilization. With allies, they must navigate dangerous territories and avoid hostile encounters to uncover the Mystery.",
+  "How I Saved the World's Largest Minecraft Server": "On the Unstable SMP, Wemmbu and His closest Allies embark upon an adventure to fight an enemy unseen by the server before, travelling to the depths of the server and understanding the scale of what they are actually up against.",
+  "I Created Minecraft's Greatest Empire": "Spoke, back from the underworld, prepares his army for a war against Wemmbu and his allies, to seize control of the true power in unstable, and remove the most powerful obstacle in Spoke's mission to dominate the Unstable SMP.",
+  "Escaping the Minecraft Underworld": "On the Unstable SMP, Parrot leads a 1000 unarmed players through a mysterious dimension.As hunger and resources depletes, players faces grueling trials and difficult choices to navigate the plains and find a way back home to the Overworld.",
+  "Escaping Terminus: The Deadliest Minecraft Prison": "On The Unstable SMP, FlameFrags and his friend find themselves trapped in a flagship prison built to attest their skills to survive. As they pass challenging traps and disadvantages, they must find a way out of this \"inescapable\" prison."
+};
+
+
+let D=[];
+
+const nz=t=>t.toLowerCase().replace(/[^a-z0-9]/g,"");
+const YTIMDB={"wG9dbWNsems":["tt39289550",7.3],"soYelcGVPac":["tt39289553",6.9],"s4Qm81fKfyk":["tt39289555",7.1],"E5jfdzB6RnY":["tt39289557",6.9],"J0Jj6A72OoE":["tt39289560",8.4],"o8ocybrrdfw":["tt39289569",7.5],"6dtNsa-MGs8":["tt39289571",8.2],"wbTIN42an0o":["tt39289577",8.7],"VSI12NnAnAY":["tt39289584",8.6],"KyLqZkfv3BU":["tt39289593",6.8],"_qc8ZF2KyeQ":["tt39289590",7.4],"ybh0HAC88MA":["tt39289604",7.7],"3N712OoF_FY":["tt39289608",8.7],"76GgWa0Lb-E":["tt39289610",7.9],"olL0XFoPRZk":["tt39289613",9.1],"93n-NH9mEL8":["tt39290451",8.8],"EAzylenTscQ":["tt39290456",6.6],"ZeTQAuvjFLQ":["tt39290463",8.9],"TcEPha03_WE":["tt39290469",8.4],"haxHwlvEN5g":["tt39290475",7.4],"r_zCM4ueMAY":["tt39290481",8.1],"Ss5ggp8Ij14":["tt39290484",9.9],"YPExvQkv_iI":["tt39290487",9.4],"AUcJWUH4d1E":["tt39290490",9.6],"ZBxGfg91HEY":["tt39290491",9.6],"CpNP39w2hEk":["tt39290495",8.9],"x9-V64fR9sU":["tt39290498",9.6],"MXD53PF5nvY":["tt39290542",6.7],"TtVKfqquGwA":["tt39290549",8.1],"9-LyPLUoX-o":["tt39290551",7.6],"kkd96ca-U2Q":["tt39290554",7.7],"U7TCIEmotdI":["tt39290555",6.1],"29tLMMQ6YCc":["tt39290561",7.5],"4JyJCTNUEAc":["tt39290567",8.4],"3BrIBpcl6ps":["tt39290571",5.8],"48fZaSwUdmg":["tt39290576",8.8],"aR9APHl0-DY":["tt39290579",5.4],"VKAJNHx40xQ":["tt39290581",7.3],"Vhnn_sG7xUk":["tt39290582",7.0],"QbDvvN2cBbA":["tt39290596",8.0],"UJyBjBXaiZI":["tt39290599",5.7],"u2CxccaHBhM":["tt39290602",7.5],"8bvsM_u1Lh0":["tt39290605",6.7],"IKaPHKQvG7M":["tt39290607",7.0],"faY0qDzcKxg":["tt39290610",9.7],"KSam6yqbA-s":["tt39290613",5.2],"VBhOumCHKac":["tt39290614",8.0],"E3lN0tAufX4":["tt39290619",5.6],"RDsvjW82SRc":["tt39290622",8.2],"8UQ6nkR-tXk":["tt39290623",7.7],"CNzhqZu3DIs":["tt39290626",9.9],"-WtYNyJlGbI":["tt39290628",6.2],"C2LjQWaKZek":["tt39290630",8.7],"kpUHhYpHolg":["tt39290631",8.8],"7WMdry6jMxA":["tt39290633",7.4],"09kYLH4QQ24":["tt39290637",5.2],"dcn93cKGs-Y":["tt39290638",7.0],"UC17MxP9b0A":["tt39290640",8.9],"MTTAHCfE8KY":["tt39290641",7.4],"QhxnImk2GFQ":["tt39290647",9.4],"xxbwmsi4n-U":["tt39290650",7.6],"4He0k2FSx7Q":["tt39290651",7.6],"MaoQ9nXXIxg":["tt39290652",5.3],"oBZ7ydMaQis":["tt39290661",9.4],"6skFEOjUros":["tt39290663",8.0],"F06GCUbg1EA":["tt39290665",6.3],"iH-skNpydl4":["tt39290672",8.2],"1zaoCECm97o":["tt39290669",6.7],"j1cyBXZhqTs":["tt39290673",8.7],"4tc58Z2iO8g":["tt39290676",7.7],"QlW3qCTCfK4":["tt39290679",8.8],"DwlWTKGUBoQ":["tt39290682",7.6],"1lbv8ts49C4":["tt39290692",7.8],"ex9FC7A-A1I":["tt39290695",8.2],"O8ouRPbdDH4":["tt39290699",8.4],"WgJtDIyF0dA":["tt39290702",8.0],"7As1EXxthAA":["tt39290708",8.6],"941po3HH0fs":["tt39290714",6.0],"8cUugaivbew":["tt39290716",8.2],"_cyb2yKhKt4":["tt39290718",7.0],"BjNNkG4YlZY":["tt39290720",8.5],"K8W0J7SzuZ8":["tt39290722",9.0],"rDMwg4wtbjs":["tt39290725",8.3],"wgjRZCbGDjM":["tt39290728",6.3],"YFmakMh8sWU":["tt39290729",9.4],"YCxuX6G7FcA":["tt39290731",8.5],"irwCY0qNEHg":["tt39290735",9.0],"tIWVas6rjZI":["tt39290738",8.0],"FET2iLvAeQQ":["tt39290740",8.4],"zCqJWe1dczo":["tt39290743",7.8],"IfLcuflwJVc":["tt39290746",7.4],"Oa0tqKHb4VA":["tt39290752",8.4],"JzOZVD8z7YM":["tt39290754",8.8],"rmaDqwFVD0I":["tt39290757",8.7],"KgsTBDRttPg":["tt39290758",8.3],"_486dPklBLU":["tt39290762",8.1],"HNnqJmlLR_w":["tt39290763",8.4],"3WzeGqQIqWA":["tt39290766",9.8],"CaTr9k9nb5E":["tt39290769",8.9],"GbOiO6aNz5A":["tt39290777",8.2],"s0UdN6baK2c":["tt39290780",8.9],"Wcgk8gEV334":["tt39318070",9.1],"FW095YeIhmU":["tt39692828",8.6],"D7hmj_cT-Qk":["tt40618523",8.3],"65jnkBVYfqA":["tt40618525",8.2],"AjhaNdGsoFE":["tt40618533",8.1],"Udk48Sm60yE":["tt40618526",8.5],"CU2HOhS9yOo":["tt40618528",7.6],"4hJr0kmjKlo":["tt40618531",8.2],"spXJwMbHZSw":["tt40618534",8.7],"CLm57ZHTJvQ":["tt40618537",8.5],"2WusTNLmBpE":["tt40618539",9.8],"xDypUdR_8d0":["tt40618541",9.5],"f_aRA-KcTQs":["tt40618544",9.5],"YPWMMa4XxLs":["tt40618545",9.2],"La1zClF8jdY":["tt40618546",8.2],"ZVrQRAf5dJg":["tt40618551",7.8],"TphfLyzVbqQ":["tt40618554",7.9],"m0K2HV50fIM":["tt40618557",8.9],"F1awawd96H8":["tt40684005",7.3],"qkXpSSmDKXw":["tt40718429",7.6],"zMoihcFz2kY":["tt40878830",8.2],"cVm98BBkQRY":["tt41135034",8.9],"pS1bWc29g0Q":["tt41583300",8.0],"O-ipuD6qy1Q":["tt41842091",8.1],"u21St-Q58GI":["tt42192311",9.0],"CM3oAbFG48k":["tt42210277",9.0],"Zw_HE1mQ7rA":["tt42326340",8.5],"HDDxxeh3r-E":["tt42372053",8.5],"j7JddsoUH8A":["tt42494661",9.7],"ZjO0dep5VjU":["tt42541244",9.0],"3Uhv1tJo7gc":["tt42697947",7.3],"bP86n9nFoJY":["tt42747428",9.1],"_6ucSC1-7ZI":["tt42901777",9.0],"FEropZ_Tq7Y":["tt43032963",9.7],"UnFIrVKA9Zc":["tt43300708",8.6],"NT2Is90lFoI":["tt43339234",9.0],"_hyFGrcVv5U":["tt43227933",8.9],"4v_jk0w7wR0":["tt43409197",8.7],"Ym2wmd19S_c":["tt43440980",7.4],"Ytm8WiQLNZA":["tt44686889",9.2],"ipEi6kkTIlI":["tt43588590",9.1],"ljppGDO4HlU":["tt43599603",7.3],"8_Au10osdEo":["tt43614033",9.9],"yBy5NnLTiWQ":["tt43642098",7.3],"BCiRLHaeHkI":["tt43701196",7.0],"ynkhNRpQ9Xc":["tt43714328",9.5],"1EgS0othQe4":["tt44093327",9.4],"V9HzAdwgf-I":["tt44113337",9.0],"BkYekSPynVo":["tt44123208",7.6],"we2dBzQxtgQ":["tt45269264",9.1],"lA1ohDqw8XA":["tt45369554",8.2],"h68WUZ8b0O0":["tt45636764",8.0],"5hG_nAYEC2g":["tt46249473",9.8],"IOS7FKtiyxE":["tt46417859",9.0],"BWmWZTDxFrk":["tt46664000",8.5],"8t8YBu7bdT0":["tt48326008",8.9],"9-j9GWjyWpY":["tt49241939",8.3],"y5IdSoHdkgg":["tt49856095",7.9],"ZT-k42SC7L0":["tt50389833",9.1],"bHxLy6Qza3M":["tt50436987",9.6]};
+const YTDESC={"9-j9GWjyWpY": "On the Unstable SMP, Parrot is trapped inside a mysterious, heavily guarded End prison alongside a thousand players. Teaming up with \"Minutetech\", a fellow inmate. They work together to survive and win five deadly floors of Various Trials.", "y5IdSoHdkgg": "On the Unstable SMP, Spoke loses Capital of Null to King of the Nether Empire: ClownPierce. Entering an arms race, Spoke relocates his army, develops orbital weapons, and rallies an underdeveloped civilization to take back what he lost.", "ZT-k42SC7L0": "On the Unstable SMP, After escaping Terminus, FlameFrags makes Alliances with The Law to develop defensive strategies to counter the offensive strikes by the Cinderest Army as the server moves toward a massive, kingdom-wide conflict aswell", "bHxLy6Qza3M": "On the Unstable SMP, the server is split into three different dimensions. For years, all three of these dimensions have lived in peace but the peace is threatened when the King of Nether, Clownpierce has decided to Invade all of Overworld"};
+const imdbOf=x=>(x.id&&YTIMDB[x.id]&&YTIMDB[x.id][0])||null;
+
+const age=d=>Math.max(1,Math.floor((Date.now()-Date.parse(d+"T00:00:00Z"))/864e5));
+let CH={};
+const LS=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},SV=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+let OV=LS("ov",{});
+const KEY=(window.location.protocol==="file:"||window.location.hostname==="localhost")?"LIVECONTAINER_KEY_PLACEHOLDER":"AIzaSyATsrn-u8woPcOL9jaIVOGCr44XWlXUsOQ";const PL="PLkHqFlg8GA8YHnj1dapA4yIuU_W9m5XvC";
+
+// Theme & Font persistence
+const currentTheme=LS("theme","dark");
+if(currentTheme!=="system") document.documentElement.setAttribute("data-theme", currentTheme);
+window.setTheme=(t)=>{
+  if(t==="system") document.documentElement.removeAttribute("data-theme");
+  else document.documentElement.setAttribute("data-theme", t);
+  SV("theme", t);
+};
+
+const currentFont=LS("font","system-ui,-apple-system,Segoe UI,sans-serif");
+document.documentElement.style.setProperty("--font-family", currentFont);
+window.setFont=(f)=>{
+  document.documentElement.style.setProperty("--font-family", f);
+  SV("font", f);
+};
+
+// Custom tooltip controller
+const tip = document.getElementById("customTooltip");
+function moveTooltip(e){
+  const x = e.clientX + 14;
+  const y = e.clientY + 14;
+  tip.style.left = x + "px";
+  tip.style.top = y + "px";
+}
+
+function animateNumber(el, target){
+  let startTime = null;
+  const duration = 1600;
+  function step(ts){
+    if(!startTime) startTime = ts;
+    const progress = Math.min((ts - startTime)/duration, 1);
+    const easeProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+    const current = Math.floor(easeProgress * target);
+    el.textContent = current.toLocaleString("en-US");
+    if(progress < 1) requestAnimationFrame(step);
+    else el.textContent = target.toLocaleString("en-US");
+  }
+  requestAnimationFrame(step);
+}
+
+function render(){
+  D.forEach(x=>{const k=nz(x.t);x.r=OV[k]??(x.id&&YTIMDB[x.id]?YTIMDB[x.id][1]:null)??null;if(!x.desc) x.desc=DESCS[x.t]||YTDESC[x.id]||"";});
+  try{drawArcs();}catch(e){console.warn(e)}
+  try{drawChars();}catch(e){console.warn(e)}
+  const N=x=>Math.round(x).toLocaleString("en-US");
+  const T=s=>{s=Math.round(s);const h=Math.floor(s/3600);return h+"h "+String(Math.floor(s%3600/60)).padStart(2,"0")+"m "+String(s%60).padStart(2,"0")+"s"};
+  const TD=s=>{
+    s=Math.round(s);
+    const days=Math.floor(s/86400);
+    const hrs=Math.floor((s%86400)/3600);
+    const mins=Math.floor((s%3600)/60);
+    return (days ? days+"d " : "") + hrs+"h "+mins+"m";
+  };
+  const sum=(a,f)=>a.reduce((x,y)=>x+f(y),0);
+  function ag(a){const rr=a.filter(x=>x.r!=null),V=sum(a,x=>x.v),K=sum(a,x=>x.k),S=sum(a,x=>x.s);
+  return{n:a.length,S,V,K,av:V/a.length,ak:K/a.length,as:S/a.length,lr:K/V*100,vph:V/(S/3600),rn:rr.length,r:rr.length?sum(rr,x=>x.r)/rr.length:null,best:a.reduce((m,x)=>x.v>m.v?x:m,a[0])}}
+  const rt=x=>x==null?"–":x.toFixed(2);
+
+  function getCreatorLinkHtml(c){
+    return pBadge(c);
+  }
+
+  function getEpisodeLinkHtml(title){
+    const vObj = D.find(x => x.t === title);
+    const num = vObj ? vObj.n : 1;
+    const fullText = `#${num} ${title}`;
+    return `<span class="clickable-title" onclick="location.hash='#episode-${num}'" data-tip="${esc(fullText)}">${fullText}</span>`;
+  }
+
+  function tbl(h,rows,tot, colGroup=""){
+    return"<table>"+colGroup+"<tr>"+h.map((x,i)=>"<th"+(i===0||i===h.length-1?" class=l":"")+">"+x+"</th>").join("")+"</tr>"+rows.map(r=>"<tr>"+r.map((c,i)=>{
+      let content = c;
+      if(i===h.length-1 && typeof c === 'string' && c !== '–' && !c.includes('·') && D.some(x=>x.t===c)) content = getEpisodeLinkHtml(c);
+      else if(c==='Spoke'||c==='Parrot'||c==='Wemmbu'||c==='FlameFrags') content = getCreatorLinkHtml(c);
+      return "<td"+(i===0||i===r.length-1?" class=l":"")+">"+content+"</td>";
+    }).join("")+"</tr>").join("")+(tot?"<tr class=t>"+tot.map((c,i)=>"<td"+(i===0||i===tot.length-1?" class=l":"")+">"+c+"</td>").join("")+"</tr>":"")+"</table>"
+  }
+
+  const row=(nm,a,mx)=>{const g=ag(a);return[nm,g.n,TD(g.S),T(g.as),N(g.V),N(g.av),N(g.K),N(g.ak),g.lr.toFixed(2)+"%",N(g.vph),rt(g.r)+(g.rn?" ("+g.rn+")":""),g.best.t]};
+  const H=["Creator/Season","Videos","Total time","Avg length","Total views","Avg views","Total likes","Avg likes","Like/view","Views per hour","Avg IMDb","Top video"];
+  const A=ag(D);
+
+  const kpiEl = document.getElementById("kpi");
+  kpiEl.innerHTML=[["Videos",A.n],["Total runtime",TD(A.S)],["Avg length",T(A.as)],["Total views",A.V],["Avg views",A.av],["Total likes",A.K],["Avg likes",A.ak],["Like/view",A.lr.toFixed(2)+"%"],["Avg IMDb",rt(A.r)+" ("+A.rn+" eps)"],["Most viewed",A.best.v]].map((x,i)=>"<div class=k><b id='kpi-"+i+"'>0</b><span>"+x[0]+"</span></div>").join("");
+
+  [[0,A.n],[3,A.V],[4,Math.round(A.av)],[5,A.K],[6,Math.round(A.ak)],[9,A.best.v]].forEach(([i,val])=>{
+    const el = document.getElementById("kpi-"+i);
+    if(el) animateNumber(el, val);
+  });
+  document.getElementById("kpi-1").textContent = TD(A.S);
+  document.getElementById("kpi-2").textContent = T(A.as);
+  document.getElementById("kpi-7").textContent = A.lr.toFixed(2)+"%"+" ("+A.rn+" eps)";
+  document.getElementById("kpi-8").textContent = rt(A.r)+" ("+A.rn+" eps)";
+
+  const cs=[...new Set(D.map(x=>x.c))],ss=["S1","S2","S3"],SN={S1:"Season 1",S2:"Season 2",S3:"Season 3"};
+  const tot=row("All",D,0);
+  const genCols = "<colgroup><col style='width:12%'><col style='width:6%'><col style='width:9%'><col style='width:9%'><col style='width:11%'><col style='width:10%'><col style='width:9%'><col style='width:8%'><col style='width:7%'><col style='width:10%'><col style='width:9%'><col style='width:20%'></colgroup>";
+
+  document.getElementById("cr").innerHTML=tbl(["Creator",...H.slice(1)],cs.map(c=>[getCreatorLinkHtml(c), ...row(c,D.filter(x=>x.c==c)).slice(1)]),tot, genCols);
+  document.getElementById("se").innerHTML=tbl(["Season",...H.slice(1)],ss.map(s=>row(SN[s],D.filter(x=>x.se==s))),tot, genCols);
+  document.getElementById("mx").innerHTML=tbl(["Creator",...ss.map(s=>SN[s]),"Total"],cs.map(c=>[getCreatorLinkHtml(c),...ss.map(s=>{const a=D.filter(x=>x.c==c&&x.se==s);if(!a.length)return"–";const g=ag(a);return g.n+" · "+N(g.av)+" · "+rt(g.r)}),(g=>g.n+" · "+N(g.av)+" · "+rt(g.r))(ag(D.filter(x=>x.c==c)))]));
+
+  const top=(ttl,f,fm,asc,flt)=>{
+    const a=D.filter(flt||(()=>1)).sort((x,y)=>asc?f(x)-f(y):f(y)-f(x)).slice(0,5);
+    if(!a.length)return"";
+    return"<div><b>"+ttl+"</b><div class='w rw' style='margin-top:6px'>"+tbl(["Video","Creator","Value"],a.map(x=>{
+      const thumb = x.id ? `https://img.youtube.com/vi/${x.id}/hqdefault.jpg` : "";
+      const fullTitle = `#${x.n} ${x.t}`;
+      const tt=esc(fullTitle);const vCell=`<div style="display:flex;align-items:center;gap:6px;min-width:0;width:100%">${thumb?`<img src="${thumb}" loading="lazy" alt="" style="flex:0 0 36px;width:36px;height:20px;object-fit:cover;border-radius:4px;background:var(--bd)">`:""}<span class="clickable-title" onclick="location.hash='#episode-${x.n}'" data-tip="${tt}" style="display:block;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${tt}</span></div>`;
+      return [vCell, getCreatorLinkHtml(x.c), `<span>${fm(x)}</span>`];
+    }), null, '<colgroup><col style="width:46%"><col style="width:24%"><col style="width:30%"></colgroup>')+"</div></div>";
+  };
+  const MED=[...D].map(x=>x.v).sort((a,b)=>a-b)[D.length>>1];
+  document.getElementById("rec").innerHTML=[top("Hidden gems (IMDb 8.5+, below-median views)",x=>x.r*1e8-x.v,x=>x.r+" ★ · "+N(x.v),0,x=>x.r!=null&&x.r>=8.5&&x.v<MED),top("Most viewed",x=>x.v,x=>N(x.v)),top("Most liked",x=>x.k,x=>N(x.k)),top("Best like/view ratio",x=>x.k/x.v,x=>(x.k/x.v*100).toFixed(2)+"%"),top("Highest IMDb",x=>x.r,x=>x.r,0,x=>x.r!=null),top("Lowest IMDb",x=>x.r,x=>x.r,1,x=>x.r!=null),top("Longest",x=>x.s,x=>T(x.s)),top("Shortest",x=>x.s,x=>T(x.s),1),top("Least viewed",x=>x.v,x=>N(x.v),1),top("Most commented",x=>x.cm,x=>N(x.cm),0,x=>x.cm>0),top("Hottest recent upload (views/day)",x=>x.v/age(x.dt),x=>N(x.v/age(x.dt))+"/day",0,x=>age(x.dt)<=60)].join("");
+
+  drawToday();
+  drawLatest();
+  paintThemeIcons();
+  drawHome();
+  drawOnThisDay();
+  drawCreatorPie();
+  drawHeat();
+  drawCharts();
+  drawTable();
+}
+
+const tsOf=x=>Date.parse(x.ts||x.dt+"T00:00:00Z");
+const timeAgo=ts=>{const s=Math.max(0,Math.floor((Date.now()-ts)/1000)),d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60);return d?`${d}d ${h}h ago`:h?`${h}h ${m}m ago`:`${m}m ago`};
+function latestCard(x){
+  if(!x)return "–";
+  const thumb=x.id?`https://img.youtube.com/vi/${x.id}/hqdefault.jpg`:"";
+  return `<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">${thumb?`<img src="${thumb}" alt="" loading="lazy" style="width:160px;height:90px;object-fit:cover;border-radius:8px">`:""}<div style="min-width:0"><div style="font-size:12px;opacity:.7">Latest episode · <span data-ago="${tsOf(x)}">${timeAgo(tsOf(x))}</span></div><div class="clickable-title" onclick="location.hash='#episode-${x.n}'" style="font-weight:600">#${x.n} ${esc(x.t)}</div></div></div>`;
+}
+const TI={};
+function paintThemeIcons(){
+  document.querySelectorAll(".tp").forEach(el=>{
+    const c=el.dataset.c,a=avatarOf(c),t=TI[c];
+    el.innerHTML=a?`<img src="${esc(a)}" alt="">`:"";
+  });
+}
+function drawLatest(){
+  const newest=arr=>[...arr].sort((a,b)=>tsOf(b)-tsOf(a))[0];
+  const h=document.getElementById("latestEp");
+  if(h)h.innerHTML=`<div class="pk">${latestCard(newest(D))}</div>`;
+}
+setInterval(()=>document.querySelectorAll("[data-ago]").forEach(el=>el.textContent=timeAgo(+el.dataset.ago)),6e4);
+
+function drawHome(){
+  const now=Date.now(), N=x=>Math.round(x).toLocaleString("en-US");
+  const card=(t,body)=>`<div class="pk"><div style="font-size:12px;opacity:.7;margin-bottom:6px">${t}</div>${body}</div>`;
+  const day=D.filter(x=>now-tsOf(x)<864e5);
+  const week=D.filter(x=>now-tsOf(x)<7*864e5);
+  const pool=day.length?day:week, label=day.length?"Most viewed · last 24h":"Most viewed · last 7 days";
+  const mv=[...pool].sort((a,b)=>b.v-a.v)[0];
+  const th=x=>x&&x.id?`<img src="https://img.youtube.com/vi/${x.id}/hqdefault.jpg" alt="" loading="lazy" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:8px;margin-bottom:8px">`:"";
+  const mvBody=mv?`${th(mv)}<div class="clickable-title" onclick="location.hash='#episode-${mv.n}'" style="font-weight:600">#${mv.n} ${esc(mv.t)}</div><div class="mu" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">${pBadge(mv.c)}<span>• ${mv.se} • ${N(mv.v)} views • ${pHM(mv.s)}</span></div>`:`<div class="mu">No uploads in the last 7 days</div>`;
+  const nxt=[...D].sort((a,b)=>a.n-b.n).find(x=>!WT[nz(x.t)]);
+  const cwBody=nxt?`${th(nxt)}<div class="clickable-title" onclick="location.hash='#episode-${nxt.n}'" style="font-weight:600">#${nxt.n} ${esc(nxt.t)}</div><div class="mu" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">${pBadge(nxt.c)}<span>• ${nxt.se} • ${N(nxt.v)} views • ${pHM(nxt.s)}</span></div>`:`<div>You've watched everything 🎉</div>`;
+  const nu=[...new Set(D.map(x=>x.c))].map(c=>{
+    const a=D.filter(x=>x.c===c).sort((p,q)=>tsOf(p)-tsOf(q));
+    if(a.length<2)return "";
+    const g=a.slice(1).map((x,i)=>(tsOf(x)-tsOf(a[i]))/864e5);
+    const avg=g.reduce((s,v)=>s+v,0)/g.length;
+    const left=(tsOf(a[a.length-1])+avg*864e5-now)/864e5;
+    const txt=left>0?`in ~${Math.ceil(left)}d`:`overdue ~${Math.ceil(-left)}d`;
+    return `<div style="display:flex;justify-content:space-between;gap:8px;margin:4px 0"><span>${pBadge(c)}</span><span>${txt}</span></div>`;
+  }).join("");
+  const total=D.reduce((s,x)=>s+x.v,0);
+  const ms=[1e8,2.5e8,5e8,1e9,2e9,5e9,1e10].find(m=>m>total)||1e10;
+  const msLabel=ms>=1e9?(ms/1e9)+"B":(ms/1e6)+"M";
+  const msBody=`<div style="font-weight:600">${N(total)} views</div><div class="mu" style="margin:4px 0 8px">${N(ms-total)} to go until ${msLabel}</div>${pBar(total/ms*100)}`;
+  document.getElementById("homeGrid").innerHTML=
+    card(label,mvBody)+
+    card("Continue watching",cwBody)+
+    card("Next upload estimate",nu||"<div class=mu>Not enough uploads yet</div>")+
+    card("Milestone",msBody);
+}
+function drawOnThisDay(){
+  const el=document.getElementById("onThisDay"); if(!el)return;
+  const t=new Date(), y=t.getFullYear();
+  const hits=D.filter(x=>{const q=new Date(tsOf(x));return q.getMonth()===t.getMonth()&&q.getDate()===t.getDate()&&q.getFullYear()<y});
+  el.innerHTML=hits.length?`<div class="pk" style="margin-top:12px"><div style="font-size:12px;opacity:.7;margin-bottom:6px">On this day</div>${hits.map(x=>`<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0"><span class="clickable-title" onclick="location.hash='#episode-${x.n}'">${new Date(tsOf(x)).getFullYear()} · #${x.n} ${esc(x.t)}</span>${pBadge(x.c)}</div>`).join("")}</div>`:"";
+}
+function drawCreatorPie(){
+  const el=document.getElementById("chartCreatorPie"); if(!el)return;
+  const N=x=>Math.round(x).toLocaleString("en-US");
+  const var_={Spoke:"--spoke",Parrot:"--parrot",Wemmbu:"--wemmbu",FlameFrags:"--flame"};
+  const cs=[...new Set(D.map(x=>x.c))].map(c=>[c,D.filter(x=>x.c===c).reduce((s,x)=>s+x.v,0)]).sort((a,b)=>b[1]-a[1]);
+  const tot=cs.reduce((s,x)=>s+x[1],0)||1;
+  let a0=-Math.PI/2, paths="", legend="";
+  cs.forEach(([c,v])=>{
+    const f=v/tot, fill=`var(${var_[c]||"--ac"})`, cx=100, cy=100, r=90;
+    const pct=(f*100).toFixed(1)+"%";
+    if(f>=0.999){paths+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill}" data-tip="${esc(c)}: ${pct}"/>`}
+    else{
+      const a1=a0+f*2*Math.PI, large=f>0.5?1:0;
+      const x0=cx+r*Math.cos(a0), y0=cy+r*Math.sin(a0), x1=cx+r*Math.cos(a1), y1=cy+r*Math.sin(a1);
+      paths+=`<path d="M${cx},${cy} L${x0.toFixed(2)},${y0.toFixed(2)} A${r},${r} 0 ${large} 1 ${x1.toFixed(2)},${y1.toFixed(2)} Z" fill="${fill}" data-tip="${esc(c)}: ${pct}"/>`;
+      a0=a1;
+    }
+    legend+=`<div style="display:flex;align-items:center;gap:8px;margin:6px 0"><i style="width:12px;height:12px;border-radius:3px;background:${fill};display:inline-block"></i>${pBadge(c)} <span class="mu">${pct} · ${N(v)} views</span></div>`;
+  });
+  el.innerHTML=`<div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap"><svg viewBox="0 0 200 200" style="width:220px;max-width:100%">${paths}</svg><div>${legend}</div></div>`;
+}
+
+function drawToday(){
+  const el=document.getElementById("todayBanner"),now=Date.now();
+  const tsOf=x=>Date.parse(x.ts||x.dt+"T00:00:00Z");
+  const fresh=D.filter(x=>{const t=tsOf(x);return now-t<864e5&&t<=now+36e5}).sort((a,b)=>tsOf(b)-tsOf(a)).slice(0,3);
+  if(!fresh.length){el.hidden=true;return}
+  const today=new Date().toDateString();
+  const label=fresh.every(x=>new Date(tsOf(x)).toDateString()===today)?"Posted today":"Just posted";
+  el.innerHTML="<div><b>🆕 "+label+"</b></div>"+fresh.map(x=>`<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">${x.id?`<img src="https://img.youtube.com/vi/${x.id}/hqdefault.jpg" alt="" style="width:80px;height:45px;object-fit:cover;border-radius:6px">`:""}${pBadge(x.c)}<span class="clickable-title" onclick="location.hash='#episode-${x.n}'">${esc(x.t)}</span><span class="mu">${x.v.toLocaleString("en-US")} views so far</span></div>`).join("");
+  el.style.flexDirection="column";el.style.alignItems="flex-start";el.hidden=false;
+}
+
+let sk="n",sd=1;
+let WT=LS("wt",{});let onlyUnw=false;
+const P_SN={S1:"Season 1",S2:"Season 2",S3:"Season 3"};
+const isW=x=>!!WT[x._k||(x._k=nz(x.t))];
+const wtBox=x=>{const o=isW(x);return`<span class="wt${o?" on":""}" data-n="${x.n}" role="checkbox" aria-checked="${o}" tabindex="0" onclick="toggleWt(${x.n})"><i class="cb"></i></span>`};
+const pHM=s=>{s=Math.round(s);return Math.floor(s/3600)+"h "+String(Math.floor(s%3600/60)).padStart(2,"0")+"m"};
+const pFmt=p=>p>=100?"100%":p<=0?"0%":p.toFixed(1)+"%";
+const pBar=p=>`<div class="pb${p>=100?" done":""}"><i style="width:${Math.min(100,p).toFixed(1)}%"></i></div>`;
+function pStat(a){let w=0,ws=0,ts=0;a.forEach(x=>{ts+=x.s;if(isW(x)){w++;ws+=x.s}});return{n:a.length,w,ts,ws,pv:a.length?w/a.length*100:0,ph:ts?ws/ts*100:0}}
+const pGS=()=>["S1","S2","S3"].map(s=>[P_SN[s],D.filter(x=>x.se===s)]);
+const pGC=()=>[...new Set(D.map(x=>x.c))].map(c=>[c,D.filter(x=>x.c===c)]);
+const CC={Spoke:"#ef4444",Parrot:"#51ebed",Wemmbu:"#8800c5",FlameFrags:"#caa727"};
+let AV=LS("av",{});
+const avatarOf=c=>(CH[c]&&CH[c].avatar)||AV[c]||"";
+const pBadge=c=>{const a=avatarOf(c),dot=`<i class="pdot" style="background:${CC[c]||"var(--ac)"}"></i>`;return `<span class="badge badge-${c}" onclick="location.hash='#creator-${c}'">${a?`<img src="${esc(a)}" alt="" onerror="this.outerHTML=this.dataset.dot" data-dot='${dot}'>`:dot}${c}</span>`};
+const pCells=g=>`<td><b style="font-size:12.5px;letter-spacing:0">${g.w} / ${g.n}</b><br><span class=mu>${pFmt(g.pv)}</span></td><td><b style="font-size:12.5px;letter-spacing:0">${pHM(g.ws)}</b><br><span class=mu>of ${pHM(g.ts)} · ${pFmt(g.ph)}</span></td><td class=l>${pBar(g.pv)}</td>`;
+function pTbl(label,groups,isC){
+  const t=pStat(D);
+  return`<table class="pt"><colgroup><col style="width:26%"><col style="width:18%"><col style="width:32%"><col style="width:24%"></colgroup><tr><th class=l>${label}</th><th>Videos</th><th>Hours</th><th class=l>Progress</th></tr>`+groups.map(([nm,a])=>`<tr><td class=l>${isC?pBadge(nm):nm}</td>${pCells(pStat(a))}</tr>`).join("")+`<tr class=t><td class=l>All</td>${pCells(t)}</tr></table>`;
+}
+function pMx(){
+  const cs=pGC().map(g=>g[0]),ss=["S1","S2","S3"];
+  return`<table class="pt"><colgroup><col style="width:25%"><col style="width:19%"><col style="width:19%"><col style="width:19%"><col style="width:18%"></colgroup><tr><th class=l>Creator</th>${ss.map(s=>`<th>${P_SN[s]}</th>`).join("")}<th>Total</th></tr>`+cs.map(c=>`<tr><td class=l>${pBadge(c)}</td>`+[...ss.map(s=>D.filter(x=>x.c===c&&x.se===s)),D.filter(x=>x.c===c)].map(a=>{if(!a.length)return"<td>–</td>";const g=pStat(a);return`<td><b style="font-size:12.5px;letter-spacing:0">${g.w} / ${g.n}</b><br><span class=mu>${pFmt(g.pv)}</span></td>`}).join("")+`</tr>`).join("")+`</table>`;
+}
+function pOv(t){
+  const ss=pGS(),cs=pGC(),done=g=>g.filter(([,a])=>{const q=pStat(a);return q.n&&q.w===q.n}).length;
+  const card=(v,l)=>`<div class="pk"><b>${v}</b><span>${l}</span></div>`;
+  const mini=(ttl,gs)=>`<div class="pk"><b style="font-size:14px;margin-bottom:6px">${ttl}</b>`+gs.map(([nm,a])=>{const g=pStat(a);return`<div class="pr"><span>${nm}</span>${pBar(g.pv)}<span>${g.w} / ${g.n} · ${pFmt(g.pv)}</span></div>`}).join("")+`</div>`;
+  return`<h2>Your progress</h2><div class="pk" style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:8px"><b style="font-size:16px">${t.w} of ${t.n} videos · ${pFmt(t.pv)}</b><span>${pHM(t.ws)} of ${pHM(t.ts)} watched (${pFmt(t.ph)})</span></div>${pBar(t.pv)}</div>`
+  +`<div class="g" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-bottom:12px">`+card(t.w+" / "+t.n,"Videos watched")+card(pFmt(t.pv),"% of videos watched")+card(pHM(t.ws),"Hours watched")+card(pFmt(t.ph),"% of hours watched")+card(pHM(t.ts-t.ws),"Left to watch")+card(done(ss)+" / "+ss.length,"Seasons completed")+card(done(cs)+" / "+cs.length,"Creators completed")+`</div>`
+  +`<div class="g" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))">`+mini("By season",ss)+mini("By creator",cs)+`</div>`;
+}
+function pCreator(c){
+  const g=pStat(D.filter(x=>x.c===c));
+  return`<div class="pk"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:8px"><b style="font-size:15px">Your progress: ${g.w} / ${g.n} videos · ${pFmt(g.pv)}</b><span>${pHM(g.ws)} of ${pHM(g.ts)} watched (${pFmt(g.ph)})</span></div>${pBar(g.pv)}`+pGS().map(([nm,l])=>{const b=pStat(l.filter(x=>x.c===c));return b.n?`<div class="pr"><span>${nm}</span>${pBar(b.pv)}<span>${b.w} / ${b.n} · ${pFmt(b.pv)}</span></div>`:""}).join("")+`</div>`;
+}
+function drawProgress(){
+  const t=pStat(D),g=id=>document.getElementById(id);
+  let e;
+  if(e=g("prog"))e.innerHTML=pOv(t);
+  if(e=g("seP"))e.innerHTML=pTbl("Season",pGS(),0);
+  if(e=g("crP"))e.innerHTML=pTbl("Creator",pGC(),1);
+  if(e=g("mxP"))e.innerHTML=pMx();
+  if(e=g("wtTop"))e.innerHTML=`<div class="pk" style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:8px"><b style="font-size:15px">${t.w} of ${t.n} videos watched · ${pFmt(t.pv)}</b><span>${pHM(t.ws)} of ${pHM(t.ts)} (${pFmt(t.ph)})</span></div>${pBar(t.pv)}</div>`;
+  if(e=g("wtPill")){e.textContent="✓ "+t.w+" / "+t.n+" · "+pFmt(t.pv);e.hidden=false}
+  if(e=g("cpProg"))e.innerHTML=pCreator(e.dataset.c);
+}
+
+function drawTable(){
+  ensureFilterBar();
+  const q=document.getElementById("q").value.toLowerCase();
+  const cols=[["#","n"],["Video","t"],["Creator","c"],["Season","se"],["Length","s"],["Views","v"],["Likes","k"],["Like %","lr"],["IMDb","r"],["Published","dt"],["Comments","cm"],["Arc","arc"]];
+  const a=D.filter(x=>(x.t+x.c).toLowerCase().includes(q)&&!(onlyUnw&&WT[nz(x.t)])&&passF(x)).map(x=>({...x,lr:x.k/x.v*100}));
+  {const fc=document.getElementById("fcount");if(fc)fc.textContent=a.length+" of "+D.length+" shown";}
+  a.sort((x,y)=>{const p=x[sk],r=y[sk];if(p==null)return 1;if(r==null)return -1;return(p>r?1:p<r?-1:0)*sd});
+  const t=document.getElementById("all");
+  const N=x=>Math.round(x).toLocaleString("en-US");
+  const T=s=>{s=Math.round(s);const h=Math.floor(s/3600);return h+"h "+String(Math.floor(s%3600/60)).padStart(2,"0")+"m "+String(s%60).padStart(2,"0")+"s"};
+
+  t.innerHTML="<colgroup><col style='width:96px'><col style='width:auto'><col style='width:96px'><col style='width:60px'><col style='width:96px'><col style='width:100px'><col style='width:90px'><col style='width:80px'><col style='width:60px'><col style='width:96px'><col style='width:90px'><col style='width:150px'></colgroup>"+"<tr>"+cols.map((c,i)=>{
+    const arrow = sk === c[1] ? (sd === 1 ? " ▲" : " ▼") : "";
+    return "<th"+(i===1?" class=l":"")+" data-k=\""+c[1]+"\">"+c[0]+arrow+"</th>";
+  }).join("")+"</tr>"+a.map(x=>{
+    const thumb = x.id ? `https://img.youtube.com/vi/${x.id}/hqdefault.jpg` : "";
+    const fullTitle = `#${x.n} ${x.t}`;
+    const titleCell = thumb ? `<div class="thumb-cell"><img src="${thumb}" loading="lazy"><span class="clickable-title" onclick="location.hash='#episode-${x.n}'" data-tip="${esc(fullTitle)}">${fullTitle}</span></div>` : `<span class="clickable-title" onclick="location.hash='#episode-${x.n}'" data-tip="${esc(fullTitle)}">${fullTitle}</span>`;
+    return "<tr><td class=l>"+wtBox(x)+" "+x.n+"</td><td class=l>"+titleCell+"</td><td>"+pBadge(x.c)+"</td><td>"+x.se+"</td><td>"+T(x.s)+"</td><td>"+N(x.v)+"</td><td>"+N(x.k)+"</td><td>"+x.lr.toFixed(2)+"%</td><td>"+(x.r??"–")+"</td><td>"+x.dt+"</td><td>"+(x.cm==null?"–":N(x.cm))+"</td><td class=l>"+esc(x.arc||"–")+"</td></tr>"
+  }).join("");
+
+  drawProgress();
+  t.querySelectorAll("th").forEach(h=>h.onclick=()=>{
+    const k=h.dataset.k;
+    if(!k) return;
+    sd=sk==k?-sd:1;
+    sk=k;
+    drawTable();
+  });
+}
+
+window.toggleWt=n=>{const x=D.find(e=>e.n===n);if(!x)return;const k=nz(x.t),on=!WT[k];if(on)WT[k]=1;else delete WT[k];SV("wt",WT);
+document.querySelectorAll('.wt[data-n="'+n+'"]').forEach(e=>{e.classList.toggle("on",on);e.setAttribute("aria-checked",on);if(onlyUnw&&on){const r=e.closest("tr");if(r)r.remove()}});
+drawProgress();drawHome();checkMilestones(on);if(location.hash==="#episode-"+n)renderEpisodeProfile(n)};
+window.randomEp=()=>{const pool=D.filter(x=>!WT[nz(x.t)]),a=pool.length?pool:D;location.hash="#episode-"+a[Math.floor(Math.random()*a.length)].n};
+window.toggleUnw=()=>{onlyUnw=!onlyUnw;const b=document.getElementById("unwBtn");b.style.background=onlyUnw?"var(--ac)":"var(--mu)";drawTable()};
+window.exportJSON=()=>{const out=D.map(x=>({number:x.n,title:x.t,creator:x.c,season:x.se,runtimeSeconds:x.s,views:x.v,likes:x.k,comments:x.cm??null,imdbRating:x.r??null,imdbId:imdbOf(x)||null,published:x.dt,youtubeUrl:x.id?"https://www.youtube.com/watch?v="+x.id:null,watched:!!WT[nz(x.t)]}));const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(out,null,2)],{type:"application/json"}));a.download="unstable_smp_stats.json";a.click()};
+window.filterCreator=(c)=>{
+  document.getElementById("q").value = c;
+  drawTable();
+};
+
+window.exportCSV=()=>{
+  let csv = "Number,Title,Creator,Season,Runtime (s),Views,Likes,Comments,IMDb,IMDb ID,Published,YouTube URL,Watched\n";
+  D.forEach(x=>{
+    csv += `"${x.n}","${x.t.replace(/"/g,'""')}","${x.c}","${x.se}",${x.s},${x.v},${x.k},${x.cm??""},"${x.r??""}","${imdbOf(x)||""}","${x.dt}","${x.id?"https://www.youtube.com/watch?v="+x.id:""}",${WT[nz(x.t)]?"yes":"no"}\n`;
+  });
+  const blob = new Blob([csv], {type: 'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'unstable_smp_stats.csv';
+  a.click();
+};
+
+
+// ---- v50: advanced filters, compare tray, extra stats ----
+let FL={arc:"",se:"",cs:[],rmin:"",rmax:"",vmin:"",vmax:"",tmin:"",tmax:"",dfrom:"",dto:"",vpd:""};
+let CMP=[];
+const fNum=v=>(v===""||v==null)?null:+v;
+function passF(x){
+  const f=FL;
+  if(f.se&&x.se!==f.se)return false;
+  if(f.arc&&x.arc!==f.arc)return false;
+  if(f.cs.length&&!f.cs.includes(x.c))return false;
+  const chk=(val,lo,hi)=>{const a=fNum(lo),b=fNum(hi);if(a!=null&&(val==null||val<a))return false;if(b!=null&&(val==null||val>b))return false;return true};
+  if(!chk(x.r,f.rmin,f.rmax))return false;
+  if(!chk(x.v,f.vmin,f.vmax))return false;
+  if(!chk(x.s/60,f.tmin,f.tmax))return false;
+  if(!chk(x.v/Math.max(1,age(x.dt)),f.vpd,null))return false;
+  if(f.dfrom&&x.dt<f.dfrom)return false;
+  if(f.dto&&x.dt>f.dto)return false;
+  return true;
+}
+const FCSS=`#fbar{margin:10px 0;padding:12px 14px;background:var(--card);border:1px solid var(--bd);border-radius:12px;box-sizing:border-box;width:100%}#fbar .fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-top:12px}
+#fbar label{display:flex;flex-direction:column;gap:5px;font-size:12px;min-width:0}
+#fbar label>span{opacity:.85}
+#fbar input,#fbar select{width:100%;box-sizing:border-box;min-height:38px;padding:8px 10px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);color:inherit;font:inherit;font-size:13px;margin:0;-webkit-appearance:none;appearance:none}
+#fbar select{background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);background-position:calc(100% - 15px) 52%,calc(100% - 10px) 52%;background-size:5px 5px;background-repeat:no-repeat;padding-right:28px}
+#fbar .rng{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+#fbar .chips{display:flex;flex-wrap:wrap;gap:6px;grid-column:1/-1;align-items:center}
+#fbar .chip{padding:6px 12px;border-radius:999px;border:none;font:inherit;font-size:12px;font-weight:600;cursor:pointer;margin:0;opacity:.5}
+#fbar .chip.on{opacity:1;outline:2px solid #fff;outline-offset:2px}
+#fbar .acts{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+#fbar .acts button{margin:0}`;
+function ensureFilterBar(){
+  if(document.getElementById("fbar"))return;
+  const t=document.getElementById("all"); if(!t)return;
+  if(!document.getElementById("fbarCss")){const s=document.createElement("style");s.id="fbarCss";s.textContent=FCSS;document.head.appendChild(s)}
+  const creators=[...new Set(D.map(x=>x.c))].sort();
+  const ses=[...new Set(D.map(x=>x.se))];
+  const lab=(txt,html)=>`<label><span>${txt}</span>${html}</label>`;
+  const rng=(a,b,ph1,ph2,type)=>`<div class="rng"><input id="${a}" type="${type||"number"}" placeholder="${ph1}" onchange="readF()"><input id="${b}" type="${type||"number"}" placeholder="${ph2}" onchange="readF()"></div>`;
+  const b=document.createElement("details"); b.id="fbar"; b.open=window.innerWidth>=700;
+  b.innerHTML=`<summary id="fsum" style="cursor:pointer;font-weight:600;padding:4px 2px">Filters</summary><div class="fgrid">`+
+    lab("Arc",`<select id="far" onchange="readF()"><option value="">All arcs</option>${[...new Set(D.map(x=>x.arc).filter(Boolean))].sort().map(a=>`<option>${esc(a)}</option>`).join("")}</select>`)+
+    lab("Season",`<select id="fse" onchange="readF()"><option value="">All seasons</option>${ses.map(s=>`<option>${s}</option>`).join("")}</select>`)+
+    lab("IMDb rating",rng("fri","fra","min","max"))+
+    lab("Views",rng("fvi","fva","min","max"))+
+    lab("Runtime (minutes)",rng("ftl","fth","min","max"))+
+    lab("Published",rng("fdf","fdt","from","to","date"))+
+    lab("Min views per day",`<input id="fvd" type="number" placeholder="any" onchange="readF()">`)+
+    `<div class="chips"><span style="font-size:12px;opacity:.85;width:100%">Creators (tap to pick; none selected = all)</span>${creators.map(c=>`<button type="button" class="chip" data-c="${esc(c)}" onclick="toggleCh(this)" style="background:${CC[c]||'var(--mu)'};color:${c==='Parrot'?'#222':'#fff'}">${esc(c)}</button>`).join("")}</div>`+
+    `<div class="acts"><span id="fcount" style="font-size:12px;opacity:.8"></span><button onclick="resetF()" style="background:var(--mu)">Reset filters</button></div></div>`;
+  t.parentNode.parentNode.insertBefore(b,t.parentNode);
+}
+window.toggleCh=el=>{el.classList.toggle("on");readF()};
+window.readF=()=>{
+  const g=id=>{const e=document.getElementById(id);return e?e.value:""};
+  FL={arc:g("far"),se:g("fse"),cs:[...document.querySelectorAll("#fbar .chip.on")].map(e=>e.dataset.c),rmin:g("fri"),rmax:g("fra"),vmin:g("fvi"),vmax:g("fva"),tmin:g("ftl"),tmax:g("fth"),dfrom:g("fdf"),dto:g("fdt"),vpd:g("fvd")};
+  {const act=[FL.arc,FL.se,FL.rmin,FL.rmax,FL.vmin,FL.vmax,FL.tmin,FL.tmax,FL.dfrom,FL.dto,FL.vpd].filter(v=>v!=="").length+FL.cs.length;const fs=document.getElementById("fsum");if(fs)fs.textContent="Filters"+(act?" · "+act+" active":"");}
+  drawTable();
+};
+window.resetF=()=>{const b=document.getElementById("fbar");if(b)b.remove();FL={arc:"",se:"",cs:[],rmin:"",rmax:"",vmin:"",vmax:"",tmin:"",tmax:"",dfrom:"",dto:"",vpd:""};drawTable();};
+
+// Compare
+function cmpGroup(it){
+  if(it.k==="e"){const x=D.find(e=>e.n===it.n);return x?{label:"#"+x.n+" "+x.t,arr:[x]}:null}
+  if(it.k==="c")return{label:it.c,arr:D.filter(e=>e.c===it.c)};
+  if(it.k==="s")return{label:it.se,arr:D.filter(e=>e.se===it.se)};
+  if(it.k==="cs")return{label:it.c+" · "+it.se,arr:D.filter(e=>e.c===it.c&&e.se===it.se)};
+  return null;
+}
+function cmpMetrics(arr){
+  const n=arr.length; if(!n)return null;
+  const tv=arr.reduce((s,x)=>s+x.v,0), tk=arr.reduce((s,x)=>s+x.k,0), ts=arr.reduce((s,x)=>s+x.s,0);
+  const rated=arr.filter(x=>x.r!=null);
+  const avgR=rated.length?rated.reduce((s,x)=>s+x.r,0)/rated.length:null;
+  const vpd=arr.reduce((s,x)=>s+x.v/Math.max(1,age(x.dt)),0)/n;
+  const top=arr.reduce((b,x)=>x.v>b.v?x:b,arr[0]);
+  const dts=arr.map(x=>x.dt).sort();
+  return{n,tv,avgV:tv/n,avgR,tot_s:ts,lk:tv?tk/tv*100:0,vpd,vph:ts?tv/(ts/3600):0,top:top.t,topV:top.v,range:dts[0]+" → "+dts[dts.length-1]};
+}
+window.cmpAdd=it=>{
+  if(CMP.length>=4){toast("Compare holds up to 4 items");return}
+  if(CMP.some(c=>JSON.stringify(c)===JSON.stringify(it)))return;
+  CMP.push(it);renderTray();toast("Added to compare");
+};
+window.cmpRemove=i=>{CMP.splice(i,1);renderTray();if(document.getElementById("cmpModal"))openCmp()};
+window.cmpPickCs=()=>{const a=document.getElementById("pCsC").value,b=document.getElementById("pCsS").value;cmpAdd({k:"cs",c:a,se:b})};
+window.cmpPickEp=()=>{const n=+document.getElementById("pEp").value;if(n)cmpAdd({k:"e",n})};
+function renderTray(){
+  let tr=document.getElementById("cmpTray");
+  if(!tr){tr=document.createElement("button");tr.id="cmpTray";tr.onclick=openCmp;
+    tr.style.cssText="position:fixed;right:16px;bottom:16px;z-index:50;background:var(--ac);color:#fff;border:none;border-radius:20px;padding:10px 16px;cursor:pointer";
+    document.body.appendChild(tr);}
+  tr.hidden=CMP.length===0;tr.textContent="Compare ("+CMP.length+")";
+}
+function openCmp(){
+  let m=document.getElementById("cmpModal");
+  if(!m){m=document.createElement("div");m.id="cmpModal";
+    m.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:60;display:flex;align-items:center;justify-content:center;padding:16px";
+    document.body.appendChild(m);}
+  const creators=[...new Set(D.map(x=>x.c))].sort(), ses=[...new Set(D.map(x=>x.se))];
+  const groups=CMP.map(cmpGroup);
+  const mets=groups.map(g=>g?cmpMetrics(g.arr):null);
+  const N=v=>Math.round(v).toLocaleString("en-US");
+  const rows=[
+    ["Episodes",x=>x.n],
+    ["Total views",x=>N(x.tv)],
+    ["Avg views / episode",x=>N(x.avgV)],
+    ["Avg IMDb",x=>x.avgR==null?"–":x.avgR.toFixed(2)],
+    ["Total runtime",x=>Math.floor(x.tot_s/3600)+"h "+Math.floor(x.tot_s%3600/60)+"m"],
+    ["Views per hour of video",x=>N(x.vph)],
+    ["Avg views / day",x=>N(x.vpd)],
+    ["Likes / views",x=>x.lk.toFixed(2)+"%"],
+    ["Most viewed",x=>x.top+" ("+N(x.topV)+")"],
+    ["Published",x=>x.range]
+  ];
+  const head=groups.map((g,i)=>g?`<th>${esc(g.label)} <a href="#" onclick="cmpRemove(${i});return false" style="color:var(--ac)">✕</a></th>`:"<th>–</th>").join("");
+  const body=rows.map(([l,f])=>`<tr><td class=l><b>${l}</b></td>${mets.map(m=>m?`<td>${f(m)}</td>`:"<td>–</td>").join("")}</tr>`).join("");
+  m.innerHTML=`<div style="background:var(--card);color:var(--tx);border-radius:12px;padding:20px;max-width:900px;width:100%;max-height:90vh;overflow:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h3 style="margin:0">Compare</h3><button onclick="document.getElementById('cmpModal').remove()" style="background:var(--mu)">Close</button></div>
+    ${CMP.length<2?`<p style="font-size:13px;opacity:.8">Add at least two items to compare.</p>`:""}
+    ${CMP.length?`<div style="overflow-x:auto"><table><tr><th class=l>Metric</th>${head}</tr>${body}</table></div>`:""}
+    <div style="margin-top:16px;font-size:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+      <span>Add creator:</span><select onchange="if(this.value)cmpAdd({k:'c',c:this.value});this.value=''"><option value="">–</option>${creators.map(c=>`<option>${c}</option>`).join("")}</select>
+      <span>Add season:</span><select onchange="if(this.value)cmpAdd({k:'s',se:this.value});this.value=''"><option value="">–</option>${ses.map(s=>`<option>${s}</option>`).join("")}</select>
+      <span>Creator × season:</span><select id="pCsC">${creators.map(c=>`<option>${c}</option>`).join("")}</select><select id="pCsS">${ses.map(s=>`<option>${s}</option>`).join("")}</select><button onclick="cmpPickCs()" style="background:var(--mu)">Add</button>
+      <span>Episode #:</span><input id="pEp" type="number" min="1" style="width:70px"><button onclick="cmpPickEp()" style="background:var(--mu)">Add</button>
+    </div></div>`;
+}
+document.addEventListener("DOMContentLoaded",()=>{renderTray();loadWiki()});
+
+// ---- v53: arcs from the wiki's arc playlists (video ID -> arc name) ----
+const ARCS=[["Exploit Arc","PLAFcZDHNaQe8"],["Empire Arc","PLU72eYHkmIbM"],["Invisible Mafia Arc","PLfES4hwgkgR0"],["Invisible Mafia Arc","PLTX2w4UEypbw"],["Invisible Mafia Arc","PLFXZ5pd3-Zko"],["Pirate Arc","PLJSmM00pjOoM"],["The Director Arc","PLe4guEB7HUD0"],["Secret Base Arc","PLF-hqJG42pUA"],["Power Arc","PLcW3r77Yg3oI"],["Farlands Arc","PLSrapuAYL23w"],["Toxic War Arc","PLhS7X27229a-3A6Dx0UKcyj_rCWTVBsM1"],["Betrayal Arc","PLVRm3zCNjznc"],["Treasure Arc","PLCgmKU8vRM3U"],["Skill Arc","PLbkAbWeZTCTw"],["Fake Identity Arc","PLMo7lSUhpNzk"],["BAT Arc","PLAOkbKL-2peg"],["Kings Arc","PLZumnHQjtc7I"],["Training Arc","PLWv070ylHBnQ"],["Election Arc","PLQvSqqXaNcmc"],["Kingdoms Arc","PLMjgQ96FBr50"],["Kingdoms Arc","PLapoomFchHKE"],["Kingdoms Arc","PLQxXPAEuj4GU"],["Missing Players Arc","PLYDD-2-7Lc0c"],["Purgatory Arc","PLYPTPhUQrxl8"],["Warriors Arc","PLWA0Kka1uF6Y"],["End Civilization Arc","PLLANkR3bDD70"],["Exile Arc","PLRkF39_6HfEo"],["Rebirth Arc","PLKHzhN0vWxx4"],["Interdimensional War Arc","PLMetjF_xtXz0"],["Interdimensional War Arc","PLahuEUfANUkI"]];
+async function arcMap(){
+  const cached=LS("arcmap2",null);
+  if(cached&&cached.m&&Date.now()-cached.t<864e5)return cached;
+  const m={},pls={};let bad=0;
+  for(const [name,pl] of ARCS){
+    try{let tok="",first=null;
+      do{const j=await api("https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId="+pl+"&key="+KEY+(tok?"&pageToken="+tok:""));
+        j.items.forEach(i=>{const v=i.contentDetails.videoId;if(!m[v])m[v]=name;const pa=i.contentDetails.videoPublishedAt;if(pa&&(!first||pa<first))first=pa});
+        tok=j.nextPageToken||""}while(tok);
+      pls[pl]={name,first};
+    }catch(e){bad++}
+  }
+  const ids=Object.keys(pls),thumbs={};
+  try{for(let i=0;i<ids.length;i+=50){const j=await api("https://www.googleapis.com/youtube/v3/playlists?part=snippet&maxResults=50&id="+ids.slice(i,i+50).join(",")+"&key="+KEY);
+    j.items.forEach(it=>{const t=it.snippet.thumbnails||{};thumbs[it.id]=(t.medium||t.default||{}).url||""})}}catch(e){bad++}
+  const meta={};
+  ids.forEach(pl=>{const {name,first}=pls[pl];const cur=meta[name];
+    if(!cur||(first&&(!cur.first||first<cur.first)))meta[name]={pl,first,thumb:thumbs[pl]||""}});
+  const out={t:Date.now(),m,meta};
+  if(bad===0&&Object.keys(m).length)SV("arcmap2",out);
+  else if(cached&&cached.m)return cached;
+  return out;
+}
+
+// ---- v54: arcs section, arc pages, cumulative trends ----
+function arcGroups(){
+  const m={};D.forEach(x=>{if(!x.arc)return;(m[x.arc]=m[x.arc]||[]).push(x)});
+  return Object.entries(m).sort((a,b)=>Math.min(...a[1].map(x=>x.n))-Math.min(...b[1].map(x=>x.n)));
+}
+function drawArcs(){
+  const el=document.getElementById("arcList"); if(!el)return;
+  const N=x=>Math.round(x).toLocaleString("en-US");
+  const T=s=>Math.floor(s/3600)+"h "+Math.floor(s%3600/60)+"m";
+  const g=arcGroups();
+  if(!g.length){el.innerHTML='<div class="mu" style="padding:12px">No arc data yet.</div>';drawTrend();return}
+  el.innerHTML='<table><tr><th class=l>Arc</th><th class=l>Creators</th><th>Videos</th><th>Views</th><th>Avg IMDb</th><th>Runtime</th><th class=l>Published</th></tr>'+g.map(([name,arr])=>{
+    const cs=[...new Set(arr.map(x=>x.c))];
+    const r=arr.filter(x=>x.r!=null), avgR=r.length?(r.reduce((s,x)=>s+x.r,0)/r.length).toFixed(2):"–";
+    const dts=arr.map(x=>x.dt).sort();
+    const meta=ARC_META&&Object.keys(ARC_META).length?ARC_META:((LS("arcmap2",null)||{}).meta||{});
+    const th=(meta[name]&&meta[name].thumb)||`https://img.youtube.com/vi/${arr[0].id}/hqdefault.jpg`;
+    return `<tr><td class=l><div style="display:flex;align-items:center;gap:10px;min-width:220px"><img src="${th}" loading="lazy" alt="" style="width:120px;height:68px;object-fit:cover;border-radius:6px;flex:0 0 120px"><span class="clickable-title" onclick="location.hash='#arc-${encodeURIComponent(name)}'">${esc(name)}</span></div></td><td class=l>${cs.map(c=>pBadge(c)).join(" ")}</td><td>${arr.length}</td><td>${N(arr.reduce((s,x)=>s+x.v,0))}</td><td>${avgR}</td><td>${T(arr.reduce((s,x)=>s+x.s,0))}</td><td class=l>${dts[0]} → ${dts[dts.length-1]}</td></tr>`;
+  }).join("")+"</table>";
+  drawTrend();
+}
+function drawArcDetail(name){
+  const el=document.getElementById("arcDetail"); if(!el)return;
+  const N=x=>Math.round(x).toLocaleString("en-US");
+  const arr=D.filter(x=>x.arc===name).sort((a,b)=>a.n-b.n);
+  el.innerHTML=`<h2>${esc(name)}</h2><p class="mu">${arr.length} videos · ${N(arr.reduce((s,x)=>s+x.v,0))} views</p><div class="w"><table><tr><th>#</th><th class=l>Video</th><th class=l>Creator</th><th>Season</th><th>Views</th><th>IMDb</th><th class=l>Published</th></tr>`+arr.map(x=>`<tr><td>${x.n}</td><td class=l><span class="clickable-title" onclick="location.hash='#episode-${x.n}'">${esc(x.t)}</span></td><td class=l>${pBadge(x.c)}</td><td>${x.se}</td><td>${N(x.v)}</td><td>${x.r??"–"}</td><td class=l>${x.dt}</td></tr>`).join("")+`</table></div>`;
+}
+let ARC_META={};
+let TR={type:"creator",met:"v"};
+const TR_TYPES=[["creator","Creator"],["season","Season"],["arc","Arc"],["cs","Creator × season"],["ca","Creator × arc"]];
+const TR_MET={v:["Views","v"],k:["Likes","k"],cm:["Comments","cm"]};
+const TR_CLR=["#ef4444","#51ebed","#8800c5","#caa727","#22c55e","#f97316","#ec4899","#3b82f6","#a3e635","#e879f9","#14b8a6","#eab308","#f43f5e","#06b6d4"];
+function trKey(x){const a=x.arc||"No arc";return TR.type==="creator"?x.c:TR.type==="season"?x.se:TR.type==="arc"?a:TR.type==="cs"?x.c+" · "+x.se:x.c+" · "+a}
+function trendSet(){TR.type=document.getElementById("trT").value;TR.met=document.getElementById("trM").value;drawTrend()}
+function smoothPath(p){
+  if(p.length<2)return "";
+  let d=`M${p[0][0].toFixed(1)},${p[0][1].toFixed(1)}`;
+  for(let i=0;i<p.length-1;i++){
+    const p0=p[i-1]||p[i],p1=p[i],p2=p[i+1],p3=p[i+2]||p2;
+    const c1x=p1[0]+(p2[0]-p0[0])/6,c1y=p1[1]+(p2[1]-p0[1])/6,c2x=p2[0]-(p3[0]-p1[0])/6,c2y=p2[1]-(p3[1]-p1[1])/6;
+    d+=` C${c1x.toFixed(1)},${c1y.toFixed(1)} ${c2x.toFixed(1)},${c2y.toFixed(1)} ${p2[0].toFixed(1)},${p2[1].toFixed(1)}`;
+  }
+  return d;
+}
+function drawTrend(){
+  const el=document.getElementById("trendBox"); if(!el||!D.length)return;
+  const N=x=>Math.round(x).toLocaleString("en-US");
+  const mk=TR_MET[TR.met]||TR_MET.v;
+  const keys=[...new Set(D.map(trKey))].sort();
+  const series=keys.map((k,i)=>{
+    const arr=D.filter(x=>trKey(x)===k).sort((a,b)=>tsOf(a)-tsOf(b));
+    let run=0;
+    const pts=arr.map(x=>{run+=(x[mk[1]]||0);return[tsOf(x),run]});
+    const col=(TR.type==="creator"&&CC[k])||TR_CLR[i%TR_CLR.length];
+    return{k,pts,col};
+  }).filter(s=>s.pts.length);
+  const all=series.flatMap(s=>s.pts);
+  const opt=(arr,cur)=>arr.map(([v,l])=>`<option value="${v}"${v===cur?" selected":""}>${l}</option>`).join("");
+  const controls=`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;font-size:12px"><select id="trT" onchange="trendSet()">${opt(TR_TYPES,TR.type)}</select><select id="trM" onchange="trendSet()">${opt(Object.entries(TR_MET).map(([k,v])=>[k,v[0]]),TR.met)}</select></div>`;
+  if(!all.length){el.innerHTML=controls+'<div class="mu">No data for this view yet.</div>';return}
+  const t0=Math.min(...all.map(p=>p[0])), t1=Math.max(...all.map(p=>p[0]))||t0+1, ymax=Math.max(...all.map(p=>p[1]))||1;
+  const W=640,H=300,Lm=64,Bm=28,Tm=10,Rm=12;
+  const sx=t=>Lm+(t-t0)/((t1-t0)||1)*(W-Lm-Rm), sy=v=>Tm+(H-Bm-Tm)*(1-v/ymax);
+  const paths=series.map(s=>`<path d="${smoothPath(s.pts.map(([t,v])=>[sx(t),sy(v)]))}" fill="none" stroke="${s.col}" stroke-width="2.5" stroke-linecap="round"/>`).join("");
+  const grid=[0,.25,.5,.75,1].map(f=>{const y=sy(ymax*f);return `<line x1="${Lm}" x2="${W-Rm}" y1="${y}" y2="${y}" stroke="currentColor" opacity=".12"/><text x="${Lm-6}" y="${y+4}" text-anchor="end" font-size="11" fill="currentColor" opacity=".7">${f===0?0:N(ymax*f)}</text>`}).join("");
+  const dl=t=>new Date(t).toISOString().slice(0,10);
+  const xl=`<text x="${Lm}" y="${H-6}" font-size="11" fill="currentColor" opacity=".7">${dl(t0)}</text><text x="${W-Rm}" y="${H-6}" text-anchor="end" font-size="11" fill="currentColor" opacity=".7">${dl(t1)}</text>`;
+  const legend=series.map(s=>`<span style="display:inline-flex;align-items:center;gap:6px;margin:4px 10px 4px 0;font-size:12px"><i style="width:12px;height:12px;border-radius:3px;background:${s.col};display:inline-block"></i>${esc(s.k)} <span class="mu">${N(s.pts[s.pts.length-1][1])}</span></span>`).join("");
+  el.innerHTML=controls+`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto">${grid}${paths}${xl}</svg><div>${legend}</div><p class="mu" style="font-size:12px">Running totals of the current numbers, by upload date. Not historical growth: that needs snapshots.</p>`;
+}
+
+
+// ---- v58: wiki cast, loaded live from the wiki's public API and parsed in the browser ----
+let WCAST={};
+let WIKI_STATUS="loading…";
+const WIKI_API="https://unstable-universe-mc.fandom.com/api.php?format=json&origin=*&action=parse&prop=wikitext&page=";
+// Member headings that don't match an Episode Order title exactly: heading -> Episode Order title
+// Wiki Episode Order rows whose YouTube ID is wrong: normalized title -> correct video ID
+const WIKI_ID_FIX={
+ "10,000 player minecraft war nether vs overworld":"bHxLy6Qza3M"
+};
+const WIKI_ALIAS={
+ "1000 Players Simulate END Minecraft Civilization":"1000 Players Build END Civilization in Hardcore Minecraft",
+ "Hunting a Minecraft Player Who Disappeared":"Hunting a Minecraft Player Who Went Missing",
+ "How to Destroy the Universe":"How to Destroy the Unstable SMP",
+ "I Got REVENGE on a Hardcore Minecraft SMP":"I Got REVENGE on the Unstable SMP",
+ "How I SURVIVED a Hardcore Minecraft SMP":"How I SURVIVED the Unstable SMP",
+ "How I DESTROYED a Hardcore Minecraft SMP":"How I DESTROYED the Unstable SMP",
+ "How I SAVED a Hardcore Minecraft SMP":"How I SAVED the Unstable SMP",
+ "I Became POWERFUL on a Hardcore Minecraft SMP":"I Became Powerful on a Hardcore Minecraft Server",
+ "I Became the Strongest on the Unstable SMP":"I Became the Strongest on a Hardcore Minecraft Server",
+ "Hunting a Minecraft Player Who Faked His Death":"Hunting a Player Who Faked His Death",
+ "I Survived 100 Days Inside a Hidden Minecraft Base":"I Survived 100 Days Inside a Hidden Base",
+ "Trapping Secret Bases on a Hardcore SMP...":"I Trapped Secret Bases on the Unstable SMP..."
+};
+function wNorm(s){return s.replace(/[\u2019\u2018]/g,"'").replace(/\t/g," ").toLowerCase().replace(/[^a-z0-9 ]/g,"").replace(/\s+/g," ").trim()}
+function wDice(a,b){
+  if(a===b)return 1; if(a.length<2||b.length<2)return 0;
+  const bg=s=>{const m=new Map();for(let i=0;i<s.length-1;i++){const g=s.slice(i,i+2);m.set(g,(m.get(g)||0)+1)}return m};
+  const A=bg(a),B=bg(b);let hit=0;A.forEach((n,g)=>{hit+=Math.min(n,B.get(g)||0)});
+  return 2*hit/((a.length-1)+(b.length-1));
+}
+async function wikiText(page){
+  const key="wiki2:"+page, cached=LS(key,null);
+  if(cached&&cached.s&&Date.now()-cached.t<864e5)return cached.s;
+  const j=await (await fetch(WIKI_API+encodeURIComponent(page))).json();
+  const s=j.parse.wikitext["*"];
+  SV(key,{t:Date.now(),s});
+  return s;
+}
+function wikiCleanName(s){
+  return s.replace(/\[\[(?:[^|\]]*\|)?([^\]]*)\]\]/g,"$1").replace(/\(.*?\)/g,"").replace(/[†*]/g,"").replace(/'{3}/g,"").trim();
+}
+function buildWikiCast(eo,mem){
+  const eps=[],seen=new Set();
+  for(const m of eo.matchAll(/\{\{EpLayout\|(.*?)\|([A-Za-z0-9_\-]{11})\}\}/g)){
+    const id=WIKI_ID_FIX[wNorm(m[1])]||m[2]; if(seen.has(id))continue; seen.add(id); eps.push({t:m[1].trim(),id});
+  }
+  const byTitle=new Map(eps.map(e=>[wNorm(e.t),e.id]));
+  const titles=[...byTitle.keys()];
+  const find=h=>{
+    const n=wNorm(WIKI_ALIAS[h]||h);
+    if(byTitle.has(n))return byTitle.get(n);
+    let best=null,bs=0;
+    for(const t of titles){const s=wDice(n,t);if(s>bs){bs=s;best=t}}
+    return bs>=0.88?byTitle.get(best):null;
+  };
+  const out={};let cur=null,group="members";
+  for(const raw of mem.split("\n")){
+    const line=raw.trim();
+    const h=line.match(/^(={2,4})\s*(.*?)\s*\1$/);
+    if(h){
+      const head=h[2].trim(), hl=head.toLowerCase();
+      if(hl==="returning members"){group="returning";continue}
+      if(hl==="new members"||hl==="new players"){group="new";continue}
+      if(hl.startsWith("season")||["main","protagonists","deuteragonists","tritagonists","antagonists","navigation"].includes(hl)){cur=null;group="members";continue}
+      cur=find(head); group="members";
+      if(cur&&!out[cur])out[cur]={new:[],returning:[],members:[]};
+      continue;
+    }
+    if(line.startsWith("*")&&cur){
+      if(/no new/i.test(line))continue;
+      const name=wikiCleanName(line.replace(/^\*+/,"").trim());
+      if(name&&!out[cur][group].includes(name))out[cur][group].push(name);
+    }
+  }
+  for(const k of Object.keys(out)){for(const g of ["new","returning","members"]) if(!out[k][g].length) delete out[k][g];}
+  return out;
+}
+async function loadWiki(){
+  try{
+    const [eo,mem]=await Promise.all([wikiText("Episode_Order"),wikiText("All_Members")]);
+    WCAST=buildWikiCast(eo,mem);
+    EP_INDEX=epIndexFrom(eo);
+    buildCharSets();
+    WIKI_STATUS="loaded: "+Object.keys(WCAST).length+" episodes with cast";
+    if(D&&D.length)render();
+    await loadEpCasts(eo);
+    buildCharSets();
+    if(D&&D.length)render();
+    if((location.hash||"").startsWith("#episode-"))renderEpisodeProfile(+location.hash.slice(9));
+    loadCharPages();
+  }catch(e){console.warn("wiki cast unavailable",e);WIKI_STATUS="failed: "+(e&&e.message?e.message:e)}
+}
+
+// ---- v60: characters, built from the wiki cast data; detail pages pull the member's wiki infobox on demand ----
+let WCHAR={};
+function buildChars(){
+  if(!Object.keys(WAPP).length)buildCharSets();
+  const m={};
+  for(const [n,set] of Object.entries(WAPP)){
+    const eps=[...set]; const byC={};
+    for(const id of eps){const ep=D.find(x=>x.id===id); const cr=ep?ep.c:""; byC[cr]=(byC[cr]||0)+1}
+    m[n]={name:n,eps,byC};
+  }
+  WCHAR=m;
+}
+function drawChars(){
+  const el=document.getElementById("charList"); if(!el)return;
+  buildChars();
+  const q=((document.getElementById("chq")||{}).value||"").toLowerCase();
+  const list=Object.values(WCHAR).filter(o=>o.name.toLowerCase().includes(q))
+    .sort((a,b)=>b.eps.length-a.eps.length||a.name.localeCompare(b.name));
+  if(!list.length){el.innerHTML='<div class="mu" style="padding:12px">No cast data yet.</div>';return}
+  el.innerHTML='<table><tr><th class=l>Character</th><th>Videos</th><th class=l>Creators (videos)</th></tr>'+list.map(o=>
+    `<tr><td class=l><span class="clickable-title" onclick="location.hash='#char-${encodeURIComponent(o.name)}'">${headImg(o.name,24,"vertical-align:middle;margin-right:6px;image-rendering:pixelated")}${esc(o.name)}</span></td><td>${o.eps.length}</td><td class=l>${Object.entries(o.byC).map(([c,n])=>pBadge(c)+" "+n).join(" ")}</td></tr>`
+  ).join("")+"</table>";
+}
+function wikiInfobox(w){
+  const i=w.indexOf("{{CC"); if(i<0)return {};
+  const e=w.indexOf("\n}}",i);
+  const body=w.slice(i,e<0?undefined:e), out={}; let k=null;
+  for(const line of body.split("\n")){
+    const m=line.match(/^\|\s*(\w+)\s*=\s*(.*)$/);
+    if(m){k=m[1];out[k]=m[2].trim()}
+    else if(k&&line.trim()){out[k]=((out[k]||"")+" "+line.trim()).trim()}
+  }
+  return out;
+}
+function wikiPlain(s){
+  return (s||"").replace(/<[^>]+>/g,"").replace(/\[https?:\/\/\S+\s+([^\]]*)\]/g,"$1").replace(/\[https?:\/\/[^\s\]]+\]/g,"").replace(/\[\[(?:[^|\]]*\|)?([^\]]*)\]\]/g,"$1").replace(/\{\{[^}]*\}\}/g,"").replace(/^[\s*•-]+/gm,"").replace(/\s+/g," ").trim();
+}
+async function drawCharDetail(name){
+  const el=document.getElementById("charDetail"); if(!el)return;
+  const o=WCHAR[name];
+  const page=name.replace(/ /g,"_");
+  el.innerHTML=`<h2>${esc(name)}</h2><p class="mu">Loading wiki info…</p>`;
+  let info={},note="",personality="",skin="";
+  try{
+    const w=await wikiText(page);
+    info=wikiInfobox(w);
+    const s=w.indexOf("== Personality ==");
+    if(s>=0){const rest=w.slice(s+17);const e=rest.search(/\n==[^=]/);personality=wikiPlain(rest.slice(0,e<0?900:e)).slice(0,700)}
+    const f=(info.image1||"").match(/([^\s|<>\n]+\.(?:png|jpe?g|gif|webp))/i);
+    if(f)skin="https://unstable-universe-mc.fandom.com/wiki/Special:FilePath/"+encodeURIComponent(f[1]);
+  }catch(e){note="Wiki page not available right now."}
+  const unmatched=WUNMATCHED[name]||[];
+  const eps=(o?o.eps:[]).map(id=>D.find(x=>x.id===id)).filter(Boolean).sort((a,b)=>a.n-b.n);
+  const cr=o?Object.entries(o.byC).map(([c,n])=>pBadge(c)+" "+n).join(" · "):"";
+  el.innerHTML=`<h2>${esc(name)}</h2>
+    <p><a href="https://unstable-universe-mc.fandom.com/wiki/${encodeURIComponent(page)}" target="_blank" rel="noopener">Wiki page ↗</a></p>
+    ${info.alias?`<p><b>Alias:</b> ${esc(wikiPlain(info.alias))}</p>`:""}
+    ${info.pronouns?`<p><b>Pronouns:</b> ${esc(wikiPlain(info.pronouns))}</p>`:""}
+    ${info.status?`<p><b>Status:</b> ${esc(wikiPlain(info.status))}</p>`:""}
+    ${info.debut?`<p><b>Debut:</b> ${esc(wikiPlain(info.debut))}</p>`:""}
+    ${headImg(name,96,"display:block;margin:8px 0;image-rendering:pixelated")}
+    ${personality?`<div style="margin:10px 0"><div style="font-size:12px;opacity:.7;margin-bottom:4px">Personality (wiki)</div><p>${esc(personality)}</p></div>`:""}
+    <p><b>Videos:</b> ${eps.length}</p>
+    ${cr?`<p>${cr}</p>`:""}
+    ${note?`<p class="mu" style="font-size:12px">${note}</p>`:""}
+    ${unmatched.length?`<p class="mu" style="font-size:12px">Wiki lists these, but they don't match a video here: ${esc(unmatched.join(", "))}</p>`:""}
+    <div class="w"><table><tr><th>#</th><th class=l>Video</th><th class=l>Creator</th><th>Season</th></tr>`+
+    eps.map(x=>`<tr><td>${x.n}</td><td class=l><span class="clickable-title" onclick="location.hash='#episode-${x.n}'">${esc(x.t)}</span></td><td class=l>${pBadge(x.c)}</td><td>${x.se}</td></tr>`).join("")+
+    `</table></div>`;
+}
+
+// ---- v63: cast from each episode's own wiki page (characters= field); All_Members is the fallback ----
+function castFromPage(w){
+  const m=w.match(/\|characters=([\s\S]*?)(?=\n?\|[A-Za-z][^=\n|]*=|\}\})/);
+  if(!m)return [];
+  const names=[...m[1].matchAll(/\[\[([^\]|]+)/g)].map(x=>x[1].replace(/_/g," ").trim()).filter(n=>n&&!n.includes(":"));
+  return [...new Set(names)];
+}
+// ---- v66: episode page content (plot, trivia, quote, POV, arc, prev/next) from the same wiki page as the cast ----
+let EPWIKI={};
+function parseEpPage(w){
+  const out={};
+  const pov=w.match(/\|pov=\[\[([^\]|]+)/); if(pov)out.pov=pov[1].trim();
+  const arc=w.match(/\|arcs=\[\[([^\]|]+)/); if(arc)out.arc=arc[1].trim();
+  const q=w.match(/\{\{QuoteMain\|((?:(?!\}\})[\s\S])*)\|([^|{}]*)\}\}/);
+  if(q){out.quote=wikiPlain(q[1]);out.quoteBy=wikiPlain(q[2])}
+  const nav=field=>{
+    const m=w.match(new RegExp("\\|"+field+"=([\\s\\S]*?)(?=\\n?\\|[A-Za-z][^=\\n|]*=|\\}\\})"));
+    if(!m)return null;
+    const line=m[1].split("\n").find(l=>/Overall/i.test(l));
+    const t=line&&line.match(/\[\[([^\]|]+)/);
+    return t?t[1].trim():null;
+  };
+  out.prev=nav("previousEpisode"); out.next=nav("nextEpisode");
+  const s=w.indexOf("== Plot =="); if(s>=0){
+    const rest=w.slice(s+11), e=rest.search(/\n==[^=]/);
+    const raw=(e<0?rest:rest.slice(0,e)).replace(/\}\}\s*$/,"").trim();
+    out.plot=raw.split(/\n\s*\n/).map(p=>wikiPlain(p)).filter(Boolean);
+  }
+  const tr=w.indexOf("== Trivia =="); if(tr>=0){
+    const rest=w.slice(tr+12), e=rest.search(/\n==[^=]/);
+    out.trivia=(e<0?rest:rest.slice(0,e)).split("\n").filter(l=>l.trim().startsWith("*")).map(l=>wikiPlain(l)).filter(Boolean);
+  }
+  return out;
+}
+async function loadEpCasts(eo){
+  const eps=[],seen=new Set();
+  for(const m of eo.matchAll(/\{\{EpLayout\|(.*?)\|([A-Za-z0-9_\-]{11})\}\}/g)){
+    const id=WIKI_ID_FIX[wNorm(m[1])]||m[2];
+    if(seen.has(id))continue; seen.add(id); eps.push({t:m[1].trim(),id});
+  }
+  let i=0,ok=0;const missing=[];
+  const worker=async()=>{
+    while(i<eps.length){
+      const e=eps[i++];
+      try{
+        const csvT=(D.find(x=>x.id===e.id)||{}).t||"";
+        let w=null;
+        for(const t of [e.t,csvT]){
+          if(!t)continue;
+          try{const c=await wikiText(t.replace(/ /g,"_")); if(/\{\{Video/.test(c)){w=c;break}}catch(_){}
+        }
+        if(!w)throw new Error("no episode page");
+        EPWIKI[e.id]=parseEpPage(w);
+        const names=castFromPage(w);
+        if(!names.length)throw new Error("no cast");
+        WCAST[e.id]={members:names};
+        ok++;
+      }catch(err){missing.push(e.t)}
+    }
+  };
+  await Promise.all([worker(),worker(),worker(),worker()]);
+  WIKI_STATUS="episode pages: "+ok+" of "+eps.length+" with cast; "+missing.length+" fell back to All_Members";
+  if(missing.length)console.warn("episode pages without cast:",missing);
+}
+
+// ---- v61: characters from each character page's appears_in (full list), plus personality and skin ----
+let WAPP={};            // name -> Set(videoId)
+let WUNMATCHED={};      // name -> appears_in titles that didn't match a video
+let EP_INDEX=null;      // {byTitle: Map(normTitle->videoId), titles: [normTitle]}
+function epIndexFrom(eo){
+  const byTitle=new Map(), seen=new Set();
+  for(const m of eo.matchAll(/\{\{EpLayout\|(.*?)\|([A-Za-z0-9_\-]{11})\}\}/g)){
+    const id=WIKI_ID_FIX[wNorm(m[1])]||m[2]; if(seen.has(id))continue; seen.add(id); byTitle.set(wNorm(m[1]),id);
+  }
+  return {byTitle,titles:[...byTitle.keys()]};
+}
+function matchEpTitle(raw){
+  if(!EP_INDEX)return null;
+  const t=wNorm(raw.replace(/\(.*?\)/g,""));
+  if(EP_INDEX.byTitle.has(t))return EP_INDEX.byTitle.get(t);
+  let best=null,bs=0;
+  for(const k of EP_INDEX.titles){const s=wDice(t,k);if(s>bs){bs=s;best=k}}
+  return bs>=0.9?EP_INDEX.byTitle.get(best):null;
+}
+// ---- v64: one entry per person (case, underscores and invisible characters ignored); head images ----
+let CANON={};   // charKey -> display name
+function charKey(n){return String(n).replace(/[\u200b-\u200f\u202a-\u202e\u2066-\u2069\ufeff]/g,"").replace(/_/g," ").replace(/\s+/g," ").trim().toLowerCase()}
+// Titles that aren't usernames: shown as written, never looked up as a skin
+const NOT_USERNAMES=["The Director","1000 players","Minor Characters/Content Creators"];
+function cleanName(n){
+  const s=String(n).replace(/[\u200b-\u200f\u202a-\u202e\u2066-\u2069\ufeff]/g,"").replace(/\s+/g," ").trim();
+  if(NOT_USERNAMES.includes(s))return s;
+  return s.replace(/ /g,"_");
+}
+function charName(n){return CANON[charKey(n)]||cleanName(n)}
+function headImg(name,px,style){
+  const nm=cleanName(name);
+  if(!/^[A-Za-z0-9_]{3,16}$/.test(nm))return "";
+  return `<img src="https://mc-heads.net/avatar/${nm}/${px}" alt="" loading="lazy" style="width:${px}px;height:${px}px;${style||""}" onerror="this.onerror=function(){this.style.display='none'};this.src='https://minotar.net/helm/${nm}/${px}'">`;
+}
+function buildCharSets(){
+  const cnt={};
+  const groups=["new","returning","members"];
+  for(const cz of Object.values(WCAST)) for(const g of groups) for(const n of (cz[g]||[])){
+    const k=charKey(n); cnt[k]=cnt[k]||{}; cnt[k][cleanName(n)]=(cnt[k][cleanName(n)]||0)+1;
+  }
+  CANON={};
+  for(const k of Object.keys(cnt)) CANON[k]=Object.entries(cnt[k]).sort((a,b)=>b[1]-a[1])[0][0];
+  WAPP={};
+  for(const [id,cz] of Object.entries(WCAST))
+    for(const g of groups) for(const n of (cz[g]||[])){
+      const name=charName(n);
+      (WAPP[name]=WAPP[name]||new Set()).add(id);
+    }
+}
+function appearsInTitles(w){
+  const v=wikiInfobox(w).appears_in||"";
+  return [...v.matchAll(/\[\[([^\]|]+)(?:\|[^\]]*)?\]\]/g)].map(m=>m[1].trim());
+}
+async function loadCharPages(){
+  const names=Object.keys(WAPP);
+  let i=0;
+  const worker=async()=>{
+    while(i<names.length){
+      const n=names[i++];
+      try{
+        const w=await wikiText(n.replace(/ /g,"_"));
+        const miss=[];
+        for(const t of appearsInTitles(w)){const id=matchEpTitle(t); if(id)WAPP[n].add(id); else miss.push(t)}
+        WUNMATCHED[n]=miss;
+      }catch(e){}
+      if(i%10===0)drawChars();
+    }
+  };
+  await Promise.all([worker(),worker(),worker(),worker()]);
+  drawChars();
+}
+
+// Router & Detail Views
+function handleRoute(){
+  const hash = location.hash || "#ov";
+  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("on"));
+  ["ov","ch","cr","se","rc","al","arc","arcd","char","chard","creator","episode"].forEach(t=>document.getElementById("p-"+t).hidden=true);
+
+  if(hash.startsWith("#char-")){
+    drawCharDetail(decodeURIComponent(hash.slice(6)));
+    document.getElementById("p-chard").hidden = false;
+  } else if(hash.startsWith("#arc-")){
+    drawArcDetail(decodeURIComponent(hash.slice(5)));
+    document.getElementById("p-arcd").hidden = false;
+  } else if(hash.startsWith("#creator-")){
+    const creatorName = hash.replace("#creator-","");
+    renderCreatorProfile(creatorName);
+    document.getElementById("p-creator").hidden = false;
+  } else if(hash.startsWith("#episode-")){
+    const epNum = +hash.replace("#episode-","");
+    renderEpisodeProfile(epNum);
+    document.getElementById("p-episode").hidden = false;
+  } else {
+    const t = hash.replace("#","");
+    const btn = document.querySelector(`nav button[data-t="${t}"]`);
+    if(btn) btn.classList.add("on");
+    const section = document.getElementById("p-"+t);
+    if(section) section.hidden = false;
+  }
+}
+
+let csk="n",csd=1;
+function renderCreatorProfile(cName){
+  const eps=D.filter(x=>x.c===cName).map(x=>({...x,vpd:x.v/age(x.dt)}));
+  const root=document.getElementById("creatorProfileContent");
+  if(!eps.length){root.innerHTML="<p>No videos found.</p>";return}
+  const N=v=>Math.round(v).toLocaleString("en-US");
+  const sum=f=>eps.reduce((s,x)=>s+f(x),0);
+  const tv=sum(x=>x.v),tl=sum(x=>x.k),tc=sum(x=>x.cm||0);
+  const rated=eps.filter(x=>x.r!=null),avgImdb=rated.length?rated.reduce((s,x)=>s+x.r,0)/rated.length:null;
+  const byDate=[...eps].sort((a,b)=>a.dt<b.dt?-1:a.dt>b.dt?1:0);
+  const gaps=byDate.slice(1).map((x,i)=>(Date.parse(x.dt)-Date.parse(byDate[i].dt))/864e5);
+  const best=eps.reduce((m,x)=>x.v>m.v?x:m,eps[0]);
+  const last=byDate[byDate.length-1];
+  const ch=CH[cName];
+  const card=(v,l,sm)=>`<div class=k><b${sm?' style="font-size:14px;line-height:1.3"':''}>${v}</b><span>${l}</span></div>`;
+  let h=`<h2 style="display:flex;align-items:center;gap:10px">${ch&&ch.avatar?`<img src="${esc(ch.avatar)}" alt="" style="width:44px;height:44px;border-radius:50%">`:""}<span>Creator Profile: ${pBadge(cName)}</span></h2>`;
+  if(ch&&ch.id)h+=`<p class="mu" style="margin:-4px 0 14px"><a href="https://www.youtube.com/channel/${esc(ch.id)}" target="_blank" style="font-weight:500">${esc(ch.handle||ch.name)} on YouTube ↗</a>${ch.since?" · channel created "+ch.since:""}${ch.country?" · "+esc(ch.country):""}</p>`;
+  h+=`<div class="pk" style="margin-bottom:14px"><div style="font-size:12px;opacity:.7;margin-bottom:6px">Latest upload</div>${latestCard([...eps].sort((a,b)=>tsOf(b)-tsOf(a))[0])}</div>`;
+  let c=card(eps.length,"Total Videos")+card(N(tv),"Total Views")+card(N(tl),"Total Likes")+card(avgImdb?avgImdb.toFixed(2):"–","Average IMDb Rating")+card(N(tv/eps.length),"Avg views per video");
+  if(tc)c+=card(N(tc),"Total comments");
+  if(ch){
+    const rk=Object.entries(CH).filter(e=>e[1].subs!=null).sort((a,b)=>b[1].subs-a[1].subs).findIndex(e=>e[0]===cName)+1;
+    c+=card(ch.subs!=null?N(ch.subs):"Hidden","Subscribers"+(rk?` · #${rk} of ${Object.keys(CH).length} creators here`:""))+card(N(ch.views),"Lifetime channel views")+card(N(ch.vids),"Videos on channel");
+    if(ch.views)c+=card((tv/ch.views*100).toFixed(1)+"%","of the channel's views come from Unstable SMP");
+  }
+  c+=card(gaps.length?(gaps.reduce((a,b)=>a+b,0)/gaps.length).toFixed(1)+" days":"–","Avg gap between uploads")+card(gaps.length?Math.max(...gaps)+" days":"–","Longest gap")+card(`<span class="clickable-title" onclick="location.hash='#episode-${best.n}'">${esc(best.t)}</span>`,"Most viewed ("+N(best.v)+")",1);
+  h+=`<div class="g" style="margin-bottom:16px">${c}</div><div id="cpProg" data-c="${cName}" style="margin-bottom:20px">${pCreator(cName)}</div><h2>All Episodes by ${cName}</h2>`;
+  const cols=[["# & Title","n"],["Season","se"],["Views","v"],["Likes","k"],["Comments","cm"],["Views/day","vpd"],["IMDb","r"],["Published","dt"]];
+  eps.sort((x,y)=>{const p=x[csk],q=y[csk];if(p==null)return 1;if(q==null)return -1;return(p>q?1:p<q?-1:0)*csd});
+  h+=`<div class="w tw"><table><colgroup><col style="width:34%"></colgroup><tr>`+cols.map((k,i)=>`<th${i?"":' class="l"'} data-k="${k[1]}">${k[0]}${csk===k[1]?(csd===1?" ▲":" ▼"):""}</th>`).join("")+`</tr>`;
+  eps.forEach(x=>{h+=`<tr><td class="l">${wtBox(x)}<span class="clickable-title" onclick="location.hash='#episode-${x.n}'">#${x.n} ${esc(x.t)}</span></td><td>${x.se}</td><td>${N(x.v)}</td><td>${N(x.k)}</td><td>${x.cm!=null?N(x.cm):"–"}</td><td>${N(x.vpd)}</td><td>${x.r??"–"}</td><td>${x.dt}</td></tr>`});
+  h+=`</table></div><div class="note">Tap a column header to sort. Views/day is lifetime views divided by days since upload.</div>`;
+  root.innerHTML=h;
+  root.querySelectorAll("th[data-k]").forEach(t=>t.onclick=()=>{csd=csk===t.dataset.k?-csd:1;csk=t.dataset.k;renderCreatorProfile(cName)});
+}
+
+function renderEpisodeProfile(num){
+  const x = D.find(e=>e.n===num);
+  if(!x){ document.getElementById("episodeProfileContent").innerHTML = "<p>Episode not found.</p>"; return; }
+  const ytLink = x.id ? `https://www.youtube.com/watch?v=${x.id}` : `https://www.youtube.com/results?search_query=${encodeURIComponent(x.t)}`;
+  const thumb = x.id ? `https://img.youtube.com/vi/${x.id}/hqdefault.jpg` : "";
+  const imdbId = imdbOf(x);
+
+  let html = `<h2>Episode #${x.n}: ${esc(x.t)}</h2>`;
+  html += `<div class="w" style="padding:20px; display:flex; flex-wrap:wrap; gap:20px; align-items:flex-start; margin-bottom:20px">`;
+  if(thumb) html += `<img src="${thumb}" style="width:280px; border-radius:8px;">`;
+  html += `<div style="flex:1; min-width:260px">`;
+  html += `<p><b>Creator:</b> ${pBadge(x.c)}</p>`;
+  const W=EPWIKI[x.id]||{};
+  if(W.pov)html += `<p><b>POV:</b> ${esc(W.pov)}</p>`;
+  if(W.arc||x.arc)html += `<p><b>Arc:</b> ${esc(W.arc||x.arc)}</p>`;
+  {const cz=WCAST[x.id];
+   if(!cz&&WIKI_STATUS.startsWith("failed")){html += `<p class="mu" style="font-size:12px">Cast: ${esc(WIKI_STATUS)}</p>`}
+   if(cz&&(cz.new||cz.returning||cz.members)){
+     const row=(lab,arr)=>{const u=[...new Set((arr||[]).map(charName))];return u.length?`<p><b>${lab}:</b> ${u.map(n=>`${headImg(n,18,"vertical-align:middle;margin-right:4px;image-rendering:pixelated")}<span class="clickable-title" onclick="location.hash='#char-${encodeURIComponent(n)}'">${esc(n)}</span>`).join(", ")}</p>`:""};
+     html += `<div style="margin:10px 0"><div style="font-size:12px;opacity:.7;margin-bottom:4px">Cast (from the wiki)</div>`+row("New",cz.new)+row("Returning",cz.returning)+row("Members",cz.members)+`</div>`;
+   }}
+  html += `<p><b>Season:</b> ${x.se}</p>`;
+  {const pl=a=>{const g=pStat(a);return g.w+" / "+g.n+" ("+pFmt(g.pv)+")"};html += `<p><b>Your progress:</b> ${x.se} ${pl(D.filter(e=>e.se===x.se))} · ${x.c} ${pl(D.filter(e=>e.c===x.c))}</p>`;}
+  html += `<p><b>Published Date:</b> ${x.dt}</p>`;
+  html += `<p><b>Runtime:</b> ${Math.floor(x.s/3600)}h ${Math.floor(x.s%3600/60)}m</p>`;
+  html += `<p><b>Views:</b> ${x.v.toLocaleString("en-US")}</p>`;
+  html += `<p><b>Likes:</b> ${x.k.toLocaleString("en-US")} (${(x.k/x.v*100).toFixed(2)}% engagement)</p>`;
+  if(x.cm!=null) html += `<p><b>Comments:</b> ${x.cm.toLocaleString("en-US")}</p>`;
+  html += `<p><b>Pace:</b> ${Math.round(x.v/age(x.dt)).toLocaleString("en-US")} views/day over ${age(x.dt).toLocaleString("en-US")} days · views rank #${[...D].sort((a,b)=>b.v-a.v).findIndex(e=>e.n===x.n)+1} of ${D.length}</p>`;
+  {const totV=D.reduce((s,e)=>s+e.v,0),pct=Math.round(D.filter(e=>e.v<x.v).length/D.length*100);
+   html += `<p><b>Share of playlist views:</b> ${(x.v/totV*100).toFixed(2)}% · views percentile: ${pct}th</p>`;
+   const rr=D.filter(e=>e.r!=null);
+   if(x.r!=null&&rr.length){const avgRr=rr.reduce((s,e)=>s+e.r,0)/rr.length,d=x.r-avgRr;
+     html += `<p><b>IMDb vs playlist average:</b> ${d>=0?"+":""}${d.toFixed(2)} (avg ${avgRr.toFixed(2)})</p>`;}}
+  html += `<p><b>IMDb Rating:</b> ⭐️ ${x.r ? x.r + " / 10" : "– (Not rated yet)"}</p>`;
+  const box=(title,inner)=>`<div style="margin-top:14px; padding:12px; background:color-mix(in srgb,var(--card) 80%,var(--bd)); border-radius:8px; border-left:3px solid var(--ac)"><b>${title}</b>${inner}</div>`;
+  if(W.quote)html += `<blockquote style="margin:14px 0 0; padding:4px 12px; border-left:3px solid var(--ac); font-style:italic">“${esc(W.quote)}”${W.quoteBy?` <span style="font-style:normal;opacity:.7">— ${esc(W.quoteBy)}</span>`:""}</blockquote>`;
+  if(W.plot&&W.plot.length){
+    const plotHtml=W.plot.map(p=>`<p style="margin:6px 0 0; font-size:12.5px; line-height:1.5">${esc(p)}</p>`).join("");
+    const longPlot=W.plot.join(" ").length>600;
+    html += `<div style="margin-top:14px; padding:12px; background:color-mix(in srgb,var(--card) 80%,var(--bd)); border-radius:8px; border-left:3px solid var(--ac)"><details ${longPlot?"":"open"}><summary style="cursor:pointer"><b>Plot (wiki)</b></summary>${plotHtml}</details></div>`;
+  } else if(x.desc){
+    html += box("Official IMDb Plot Synopsis", `<p style="margin:6px 0 0; font-size:12.5px; line-height:1.5">${esc(x.desc)}</p>`);
+  }
+  if(W.trivia&&W.trivia.length){
+    html += box("Trivia (wiki)", `<ul style="margin:6px 0 0; padding-left:18px; font-size:12.5px; line-height:1.5">${W.trivia.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>`);
+  }
+  html += `<div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">`;
+  html += `<a href="${ytLink}" target="_blank"><button>Watch on YouTube ↗</button></a>`;
+  if(imdbId) html += `<a href="https://www.imdb.com/title/${imdbId}/" target="_blank"><button style="background:#f5c518;color:#000">View on IMDb ↗</button></a>`;
+  html += `<button class="wbtn${isW(x)?" on":""}" onclick="toggleWt(${x.n})" style="background:${isW(x)?"var(--ac)":"var(--mu)"}"><i class="cb"></i>${isW(x)?"Watched":"Mark as watched"}</button>`;
+  html += `<button onclick="cmpAdd({k:'e',n:${x.n}})" style="background:var(--mu)">＋ Compare</button>`;
+  html += `<button onclick="navigator.clipboard.writeText(location.href);alert('Episode link copied to clipboard!');" style="background:var(--mu)">🔗 Share Episode</button>`;
+  html += `</div>`;
+  {const wikiNav=(lab,title)=>{const id=title&&matchEpTitle(title),e=id&&D.find(v=>v.id===id);return e?`<p style="font-size:12.5px">${lab}: <span class="clickable-title" onclick="location.hash='#episode-${e.n}'">#${e.n} ${esc(e.t)}</span></p>`:""};
+   const nv=wikiNav("Previous (overall)",W.prev)+wikiNav("Next (overall)",W.next); if(nv)html += `<div style="margin-top:10px">${nv}</div>`;}
+  html += `<div style="display:flex;gap:10px;margin-top:12px">${x.n>1?`<button onclick="location.hash='#episode-${x.n-1}'" style="background:var(--mu)">← #${x.n-1}</button>`:""}${x.n<D.length?`<button onclick="location.hash='#episode-${x.n+1}'" style="background:var(--mu)">#${x.n+1} →</button>`:""}</div>`;
+  html += `</div></div>`;
+  document.getElementById("episodeProfileContent").innerHTML = html;
+}
+
+// ---- Config: fill these in, empty = hidden ----
+// Online count: free Firebase Realtime Database. See setup notes in the README/chat.
+const FB={apiKey:"AIzaSyBEZBQNcJc7FGW5B0MymmZqP-SkRPmJKUs",databaseURL:"https://unstablesmplive-default-rtdb.firebaseio.com",projectId:"unstablesmplive",appId:"1:941701460104:web:3c28876dd7ed898a026f3d"};
+// Server player count: any public Java server address (no key needed).
+const SERVER={ip:"",name:"Unstable SMP events server"};
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement("script");s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s)})}
+async function startPresence(){
+  if(!FB.databaseURL)return;
+  const el=document.getElementById("liveVisitorsPill");
+  try{
+    await loadScript("https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js");
+    await loadScript("https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js");
+    const app=firebase.initializeApp(FB);
+    const db=firebase.database(app);
+    const me=db.ref("presence").push();
+    me.onDisconnect().remove();
+    me.set({t:firebase.database.ServerValue.TIMESTAMP});
+    window.addEventListener("pagehide",()=>me.remove());
+    db.ref("presence").on("value",snap=>{el.innerHTML="🟢 <b>"+snap.numChildren().toLocaleString("en-US")+"</b> online now";el.hidden=false});
+  }catch(e){}
+}
+async function pollServer(){
+  if(!SERVER.ip)return;const el=document.getElementById("srv");
+  try{const j=await(await fetch("https://api.mcstatus.io/v2/status/java/"+encodeURIComponent(SERVER.ip))).json();
+    el.hidden=false;el.textContent=j.online?"🎮 "+j.players.online.toLocaleString("en-US")+" playing on the server":"🔴 Server offline";el.title=SERVER.name}
+  catch(e){el.hidden=true}
+}
+// ---- Remote config: edit at Firebase > Realtime Database > "config". No Netlify deploy needed. ----
+// Supported keys: server {ip,name}, links {imdb,playlist,discord} (empty string hides a link), imdb {"titlekey":"ttID"}
+async function loadRemote(){
+  if(!FB.databaseURL)return;
+  try{
+    const c=await (await fetch(FB.databaseURL+"/config.json")).json();
+    if(!c)return;
+    if(c.server)Object.assign(SERVER,c.server);
+    
+    if(c.links){
+      const L=c.links,set=(id,url)=>{const a=document.getElementById(id);if(!a)return;if(url)a.href=url;else a.hidden=true};
+      if("imdb" in L)set("lkImdb",L.imdb);
+      if("playlist" in L)set("lkPlaylist",L.playlist);
+      if("discord" in L)set("lkDiscord",L.discord);
+    }
+  }catch(e){}
+}
+startPresence();
+loadRemote().then(()=>{pollServer();setInterval(()=>{if(!document.hidden)pollServer()},6e4)});
+// Keyboard access for clickable titles and badges
+new MutationObserver(()=>document.querySelectorAll(".clickable-title:not([tabindex]),.badge[onclick]:not([tabindex]),.wt:not([tabindex])").forEach(e=>{e.tabIndex=0;e.setAttribute("role","link")})).observe(document.body,{childList:true,subtree:true});
+document.addEventListener("keydown",e=>{const t=e.target;if(!t.matches)return;if(e.key==="Enter"&&t.matches("[role=link],[role=checkbox]"))t.click();else if(e.key===" "&&t.matches("[role=checkbox]")){e.preventDefault();t.click()}});
+
+// Attach tooltip listeners dynamically
+document.addEventListener("mouseover", e => {
+  const target = e.target.closest("[data-tip]");
+  if(target){
+    tip.textContent = target.getAttribute("data-tip");
+    tip.classList.add("show");
+    moveTooltip(e);
+  }
+});
+document.addEventListener("mousemove", e => {
+  if(tip.classList.contains("show")) moveTooltip(e);
+});
+document.addEventListener("mouseout", e => {
+  if(e.target.closest("[data-tip]")) tip.classList.remove("show");
+});
+
+document.getElementById("q").oninput=drawTable;
+
+function drawCharts(){
+  const sortedByDate = [...D].sort((a,b)=>new Date(a.dt)-new Date(b.dt));
+  const maxV = Math.max(...D.map(x=>x.v)), minV = Math.min(...D.map(x=>x.v));
+  const maxK = Math.max(...D.map(x=>x.k)), minK = Math.min(...D.map(x=>x.k));
+
+  // Chart 1: Views Over Time
+  let svg1 = `<svg viewBox="0 0 800 250"><polyline fill="none" stroke="var(--ac)" stroke-width="2.5" stroke-linecap="round" points="`;
+  sortedByDate.forEach((x,i)=>{
+    const px = 40 + (i / (sortedByDate.length - 1)) * 720;
+    const py = 220 - ((x.v - minV) / (maxV - minV || 1)) * 190;
+    svg1 += `${px},${py} `;
+  });
+  svg1 += `" />`;
+  sortedByDate.forEach((x,i)=>{
+    const px = 40 + (i / (sortedByDate.length - 1)) * 720;
+    const py = 220 - ((x.v - minV) / (maxV - minV || 1)) * 190;
+    svg1 += `<circle class="chart-point" cx="${px}" cy="${py}" fill="var(--ac)" onclick="location.hash='#episode-${x.n}'" data-tip="${esc(`#${x.n}:${x.t} (${Math.round(x.v/1e6)}M views -${x.dt})`)}"/>`;
+  });
+  svg1 += `</svg>`;
+  document.getElementById("chartViewsTime").innerHTML = svg1;
+
+  // Chart 2: Views by Creator
+  const creatorViews = {};
+  const cs = [...new Set(D.map(x=>x.c))];
+  cs.forEach(c=>{ creatorViews[c] = D.filter(x=>x.c==c).reduce((s,x)=>s+x.v,0); });
+  const maxCV = Math.max(...Object.values(creatorViews));
+  let svg2 = `<svg viewBox="0 0 800 200">`;
+  cs.forEach((c,i)=>{
+    const val = creatorViews[c];
+    const w = (val / maxCV) * 520;
+    const y = 20 + i * 45;
+    const colorVar = c === 'Spoke' ? 'var(--spoke)' : c === 'Parrot' ? 'var(--parrot)' : c === 'Wemmbu' ? 'var(--wemmbu)' : 'var(--flame)';
+    svg2 += `<text x="10" y="${y+18}" fill="var(--fg)" font-size="13" font-weight="600" onclick="location.hash='#creator-${c}'" style="cursor:pointer">${c}</text>
+             <rect x="130" y="${y}" width="${w}" height="26" fill="${colorVar}" rx="6" onclick="location.hash='#creator-${c}'" data-tip="${esc(`${c}:${Math.round(val/1e6)}M total views`)}" style="cursor:pointer"/>
+             <text x="${140+w}" y="${y+18}" fill="var(--mu)" font-size="12" font-weight="500">${Math.round(val/1e6)}M views</text>`;
+  });
+  svg2 += `</svg>`;
+  document.getElementById("chartViewsCreator").innerHTML = svg2;
+
+  // Chart 3: Season vs Season Average Views
+  const seasons = ["S1","S2","S3"];
+  const seasonAvgs = seasons.map(s=>{ const a = D.filter(x=>x.se==s); return a.length ? a.reduce((sum,x)=>sum+x.v,0)/a.length : 0; });
+  const maxSAV = Math.max(...seasonAvgs);
+  let svg3 = `<svg viewBox="0 0 800 180">`;
+  seasons.forEach((s,i)=>{
+    const h = (seasonAvgs[i] / maxSAV) * 110;
+    const x = 110 + i * 220;
+    const y = 145 - h;
+    svg3 += `<rect x="${x}" y="${y}" width="100" height="${h}" fill="var(--ac)" rx="8" opacity="0.9" data-tip="${esc(`Season ${i+1} Avg:${Math.round(seasonAvgs[i]/1e6)}M views`)}" style="cursor:pointer"/>
+             <text x="${x+50}" y="${y-10}" text-anchor="middle" fill="var(--fg)" font-size="13" font-weight="600">${Math.round(seasonAvgs[i]/1e6)}M</text>
+             <text x="${x+50}" y="170" text-anchor="middle" fill="var(--mu)" font-size="13" font-weight="500">Season ${i+1}</text>`;
+  });
+  svg3 += `</svg>`;
+  document.getElementById("chartSeasonViews").innerHTML = svg3;
+
+  // Chart 4: IMDb Rating vs Views
+  const rated = D.filter(x=>x.r!=null);
+  let svg4 = `<svg viewBox="0 0 800 200">`;
+  rated.forEach(x=>{
+    const cx = 40 + ((x.r - 5) / 5) * 720;
+    const cy = 180 - ((x.v - minV) / (maxV - minV || 1)) * 160;
+    svg4 += `<circle class="chart-point" cx="${cx}" cy="${cy}" fill="var(--ac)" opacity="0.75" onclick="location.hash='#episode-${x.n}'" data-tip="${esc(`${x.t} | IMDb: ${x.r} \vert{} Views:${Math.round(x.v/1e6)}M`)}"/>`;
+  });
+  svg4 += `</svg>`;
+  document.getElementById("chartImdbViews").innerHTML = svg4;
+
+  // Chart 5: Likes vs Views Correlation
+  let svg5 = `<svg viewBox="0 0 800 200">`;
+  D.forEach(x=>{
+    const cx = 40 + ((x.k - minK) / (maxK - minK || 1)) * 720;
+    const cy = 180 - ((x.v - minV) / (maxV - minV || 1)) * 160;
+    svg5 += `<circle class="chart-point" cx="${cx}" cy="${cy}" fill="var(--spoke)" opacity="0.75" onclick="location.hash='#episode-${x.n}'" data-tip="${esc(`${x.t} | Likes: ${x.k.toLocaleString()} \vert{} Views:${Math.round(x.v/1e6)}M`)}"/>`;
+  });
+  svg5 += `</svg>`;
+  document.getElementById("chartLikesViews").innerHTML = svg5;
+}
+
+const $=id=>document.getElementById(id);
+const iso=d=>{const m=/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/.exec(d)||[];return(+m[1]||0)*3600+(+m[2]||0)*60+(+m[3]||0)};
+const who=n=>{const l=n.toLowerCase();return l.includes("spoke")?"Spoke":l.includes("parrot")?"Parrot":l.includes("wemmbu")?"Wemmbu":l.includes("flame")?"FlameFrags":n};
+async function api(u){const r=await fetch(u),j=await r.json();if(j.error)throw new Error(j.error.message);return j}
+async function live(){const key=KEY;
+try{const ids=[];let tok="";do{const j=await api("https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId="+PL+"&key="+key+(tok?"&pageToken="+tok:""));ids.push(...j.items.map(i=>i.contentDetails.videoId));tok=j.nextPageToken||""}while(tok);
+const m={};for(let i=0;i<ids.length;i+=50){const j=await api("https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&maxResults=50&id="+ids.slice(i,i+50).join(",")+"&key="+key);j.items.forEach(v=>m[v.id]=v)}
+const L=ids.filter(i=>m[i]).map((id,i)=>{const v=m[id],n=i+1;return{n,id,c:who(v.snippet.channelTitle),t:v.snippet.title,s:iso(v.contentDetails.duration),v:+v.statistics.viewCount||0,k:+v.statistics.likeCount||0,dt:v.snippet.publishedAt.slice(0,10),ts:v.snippet.publishedAt,cm:+v.statistics.commentCount||0,ch:v.snippet.channelId,r:null,se:n<=27?"S1":n<=115?"S2":"S3",desc:DESCS[v.snippet.title]||YTDESC[id]||""}});
+try{const cj=await api("https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&maxResults=50&id="+[...new Set(L.map(x=>x.ch))].join(",")+"&key="+key);const o={};cj.items.forEach(c=>{const s=c.statistics||{},p=c.snippet||{};o[who(p.title)]={id:c.id,name:p.title,subs:s.hiddenSubscriberCount?null:+s.subscriberCount,views:+s.viewCount||0,vids:+s.videoCount||0,since:(p.publishedAt||"").slice(0,10),country:p.country||"",handle:p.customUrl||"",avatar:((p.thumbnails||{}).medium||(p.thumbnails||{}).default||{}).url||""}});CH=o;AV=Object.assign({},AV,Object.fromEntries(Object.entries(o).filter(([,v])=>v.avatar).map(([k,v])=>[k,v.avatar])));SV("av",AV)}catch(e){}
+const AM=await arcMap();ARC_META=AM.meta||{};L.forEach(x=>x.arc=AM.m[x.id]||"");
+D=L;SV("lc",{t:Date.now(),L,CH});render();
+checkWhatsNew(L);
+$("st").textContent="Updated "+new Date().toLocaleDateString()}
+catch(e){$("st").style.color="#d97706";$("st").textContent="Synced from cache"}}
+
+const PREV=LS("snap",null);let newsDone=false;
+function checkWhatsNew(L){
+  if(!L||!L.length||newsDone)return;newsDone=true;
+  const cur={t:Date.now(),v:{}};L.forEach(x=>{if(x.id)cur.v[x.id]=x.v});
+  const stale=!PREV||!PREV.v||Date.now()-PREV.t>36e5;
+  if(PREV&&PREV.v&&Date.now()-PREV.t>36e5){
+    const fresh=L.filter(x=>x.id&&!(x.id in PREV.v));
+    const old=L.filter(x=>x.id in PREV.v).map(x=>({x,g:x.v-PREV.v[x.id]}));
+    const gain=old.reduce((s,o)=>s+Math.max(0,o.g),0);
+    const hot=old.sort((a,b)=>b.g-a.g)[0];
+    const parts=[];
+    if(fresh.length)parts.push("<b>"+fresh.length+" new upload"+(fresh.length>1?"s":"")+"</b> ("+fresh.slice(-3).map(x=>esc(x.t)).join(", ")+")");
+    if(gain>0)parts.push("<b>"+gain.toLocaleString("en-US")+"</b> new views across the playlist");
+    if(hot&&hot.g>0)parts.push("fastest riser: <i>"+esc(hot.x.t)+"</i> (+"+hot.g.toLocaleString("en-US")+")");
+    if(parts.length){$("newsText").innerHTML=parts.join(" · ");$("newsBanner").hidden=false}
+  }
+  if(stale)SV("snap",cur);
+}
+$("dismissNews").onclick=()=>{$("newsBanner").hidden=true;};
+
+const tb=[...document.querySelectorAll("#tabs button")];
+tb.forEach(b=>b.onclick=()=>{
+  location.hash = "#" + b.dataset.t;
+});
+
+window.addEventListener("hashchange", handleRoute);
+
+const lc=LS("lc",null);
+CH=(lc&&lc.CH)||{};
+if(lc && lc.L){
+  D = lc.L.map((x,i)=>{
+    const n = i+1;
+    return {...x, desc: DESCS[x.t] || x.desc || ""};
+  });
+}
+render();
+handleRoute();
+
+$("st").textContent = lc ? "Updated "+new Date(lc.t).toLocaleDateString() : "Built-in dataset active";
+
+if(!lc||Date.now()-lc.t>18e5||!(lc.L||[]).some(x=>x.id))live();else checkWhatsNew(D);
+
+
+let MSD=LS("ms",{});
+const MS_LEVELS=[25,50,100];
+function toast(msg){let t=document.getElementById("toast");if(!t){t=document.createElement("div");t.id="toast";t.style.cssText="position:fixed;left:16px;bottom:16px;z-index:60;background:var(--card);color:var(--fg);border:1px solid var(--ac);padding:10px 14px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.35);opacity:0;transition:opacity .3s";document.body.appendChild(t)}t.textContent=msg;t.style.opacity=1;clearTimeout(t._h);t._h=setTimeout(()=>t.style.opacity=0,4000)}
+function checkMilestones(celebrate){
+  [...new Set(D.map(x=>x.c))].forEach(c=>{
+    const eps=D.filter(x=>x.c===c),done=eps.filter(x=>WT[nz(x.t)]).length,pct=done/eps.length*100;
+    MS_LEVELS.forEach(l=>{const key=c+":"+l;if(pct>=l&&!MSD[key]){MSD[key]=1;SV("ms",MSD);if(celebrate)toast(l===100?`🏁 Every ${c} episode watched`:`🎉 ${l}% of ${c}'s episodes watched`)}});
+  });
+}
+function drawHeat(){
+  const el=document.getElementById("chartHeat");if(!el||!D.length)return;
+  const cnt={};D.forEach(x=>{cnt[x.dt]=(cnt[x.dt]||0)+1});
+  const dates=Object.keys(cnt).sort();
+  const start=Date.parse(dates[0]+"T00:00:00Z"),monOff=(new Date(start).getUTCDay()+6)%7,first=start-monOff*864e5;
+  const today=Date.parse(new Date().toISOString().slice(0,10)+"T00:00:00Z");
+  const weeks=Math.floor((today-first)/864e5/7)+1,C=13,G=3,P=8;let rects="";
+  for(let w=0;w<weeks;w++)for(let d=0;d<7;d++){
+    const t=first+(w*7+d)*864e5;if(t>today||t<start&&!cnt[new Date(t).toISOString().slice(0,10)])continue;
+    const k=new Date(t).toISOString().slice(0,10),n=cnt[k]||0;
+    const fill=n?`color-mix(in srgb,var(--ac) ${Math.min(100,35+n*30)}%,var(--bd))`:"var(--bd)";
+    rects+=`<rect x="${P+w*(C+G)}" y="${4+d*(C+G)}" width="${C}" height="${C}" rx="2" fill="${fill}"><title>${k}: ${n} upload${n===1?"":"s"}</title></rect>`;
+  }
+  el.innerHTML=`<svg viewBox="0 0 ${P+weeks*(C+G)} ${4+7*(C+G)}" style="width:100%;min-width:640px;height:auto">${rects}</svg>`;
+}
+function renderJump(){
+  const el=document.getElementById("qJump"),q=(document.getElementById("q").value||"").trim().toLowerCase();if(!el)return;
+  if(q.length<2){el.innerHTML="";return}
+  const hits=D.filter(x=>(x.t+" "+x.c).toLowerCase().includes(q)).slice(0,8);
+  el.innerHTML=hits.length?`<div class="pk">${hits.map(x=>`<div class="clickable-title" onclick="location.hash='#episode-${x.n}'" style="margin:6px 0">#${x.n} ${esc(x.t)} ${pBadge(x.c)}</div>`).join("")}</div>`:`<div class="mu">No matches</div>`;
+}
+const qEl=document.getElementById("q");if(qEl)qEl.addEventListener("input",renderJump);
+window.shareCard=()=>{
+  const cv=document.createElement("canvas");cv.width=1200;cv.height=630;const g=cv.getContext("2d");
+  const cs=getComputedStyle(document.documentElement),col=n=>cs.getPropertyValue(n).trim()||"#888",F="system-ui, -apple-system, sans-serif";
+  g.fillStyle=col("--bg");g.fillRect(0,0,1200,630);g.fillStyle=col("--ac");g.fillRect(0,0,1200,8);
+  const W=D.filter(x=>WT[nz(x.t)]),tot=D.length,hW=W.reduce((a,x)=>a+x.s,0)/3600,hT=D.reduce((a,x)=>a+x.s,0)/3600;
+  g.fillStyle=col("--fg");g.font="bold 64px "+F;g.fillText("Unstable SMP",60,110);
+  g.fillStyle=col("--mu");g.font="28px "+F;g.fillText("My progress",60,155);
+  g.fillStyle=col("--ac");g.font="bold 120px "+F;g.fillText(`${W.length}/${tot}`,60,300);
+  g.fillStyle=col("--mu");g.font="30px "+F;g.fillText(`episodes · ${hW.toFixed(1)}h of ${hT.toFixed(1)}h watched · ${(W.length/tot*100).toFixed(1)}%`,60,350);
+  [...new Set(D.map(x=>x.c))].forEach((c,i)=>{
+    const eps=D.filter(x=>x.c===c),d=eps.filter(x=>WT[nz(x.t)]).length,y=420+i*48;
+    g.fillStyle=col("--fg");g.font="26px "+F;g.fillText(c,60,y+24);
+    g.fillStyle=col("--card");g.fillRect(260,y+4,640,26);
+    g.fillStyle=col("--ac");g.fillRect(260,y+4,640*(d/eps.length),26);
+    g.fillStyle=col("--mu");g.fillText(`${d}/${eps.length}`,930,y+26);
+  });
+  g.fillStyle=col("--mu");g.font="20px "+F;g.fillText("unstablesmplive.pages.dev",60,600);
+  cv.toBlob(b=>{const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="unstable-smp-progress.png";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)});
+};
+let deferredPrompt=null;
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;const l=document.getElementById("installLink");if(l)l.hidden=false});
+window.installApp=e=>{e.preventDefault();if(!deferredPrompt)return;deferredPrompt.prompt();deferredPrompt=null;const l=document.getElementById("installLink");if(l)l.hidden=true};
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+})();
+</script><script>document.querySelectorAll(".dropdown-wrap>button").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();const w=b.parentElement,o=w.classList.contains("open");document.querySelectorAll(".dropdown-wrap.open").forEach(x=>x.classList.remove("open"));if(!o)w.classList.add("open")}));document.querySelectorAll(".dropdown-menu button").forEach(b=>b.addEventListener("click",()=>b.closest(".dropdown-wrap").classList.remove("open")));document.addEventListener("click",()=>document.querySelectorAll(".dropdown-wrap.open").forEach(x=>x.classList.remove("open")));</script></body></html>
