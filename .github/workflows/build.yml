@@ -35,11 +35,20 @@ jobs:
           cd myapp
           cordova build ios --emulator --codeSignIdentity="-" --developmentTeam="-"
 
-      - name: Package into IPA
+      - name: Package into IPA via Deep Scan
         run: |
           mkdir -p Payload
-          # Use a wildcard copy pattern to grab the .app folder regardless of naming variations
-          cp -r myapp/platforms/ios/build/emulator/*.app Payload/
+          
+          # Automatically search the full workspace folder to find where Xcode compiled the .app payload
+          APP_PATH=$(find myapp/platforms/ios -name "*.app" -type d | head -n 1)
+          
+          if [ -z "$APP_PATH" ]; then
+            echo "Error: Could not locate compiled application file anywhere in workspace structure."
+            exit 1
+          fi
+          
+          echo "Found application bundle layout path at: $APP_PATH"
+          cp -r "$APP_PATH" Payload/
           zip -r MyApp.ipa Payload
 
       - name: Upload IPA Artifact
