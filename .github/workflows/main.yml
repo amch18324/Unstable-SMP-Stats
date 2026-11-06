@@ -14,6 +14,75 @@ jobs:
       - name: Inject API Key
         run: |
           sed -i "s/LIVECONTAINER_KEY_PLACEHOLDER/${{ secrets.LIVECONTAINER_KEY }}/g" index.html
+name: Build LiveContainer IPA
+on: [workflow_dispatch]
 
-      # Your existing steps that zip or build the .ipa go here,
-      # AFTER the Inject API Key step.
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install Cordova
+        run: npm install -g cordova
+
+      - name: Create Project
+        run: |
+          cordova create myapp com.example.myapp MyApp
+          cd myapp
+          cordova platform add ios
+
+      - name: Copy All Assets and Folders into App
+        run: |
+          rm -rf myapp/www/*
+          find . -maxdepth 1 -type f ! -name "README.md" ! -name ".gitignore" ! -name "img.zip" -exec cp {} myapp/www/ \;
+          if [ -f img.zip ]; then
+            unzip img.zip -d myapp/www/
+          fi
+
+      - name: Prepare iOS Project Structures
+        run: |
+          cd myapp
+          cordova prepare ios
+
+      - name: Compile Unsigned Hardware Binary via Xcode Direct
+        run: |
+          cd myapp/platforms/ios
+          # Added CONFIGURATION_BUILD_DIR to lock down the exact file destination path
+          xcodebuild -workspace App.xcworkspace \
+                     -scheme App \
+                     -configuration Debug \
+                     -sdk iphoneos \
+                     CONFIGURATION_BUILD_DIR="$(pwd)/build/Device" \
+                     CODE_SIGNING_ALLOWED=NO \
+                     CODE_SIGNING_REQUIRED=NO \
+                     CODE_SIGN_IDENTITY="" \
+                     PROVISIONING_PROFILE_SPECIFIER=""
+
+      - name: Package into Device IPA via Deep Scan
+        run: |
+          mkdir -p Payload
+          
+          # Locates the compiled physical iOS architecture bundle folder
+          APP_PATH=$(find myapp/platforms/ios/build/Device -name "*.app" -type d | head -n 1)
+          
+          if [ -z "$APP_PATH" ]; then
+            echo "Error: Could not locate compiled device binary package file."
+            exit 1
+          fi
+          
+          echo "Found hardware package layout path at: $APP_PATH"
+          cp -r "$APP_PATH" Payload/
+          zip -r MyApp.ipa Payload
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: livecontainer-ipa
+          path: MyApp.ipa
