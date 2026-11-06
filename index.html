@@ -503,7 +503,7 @@ function render(){
   };
   const sum=(a,f)=>a.reduce((x,y)=>x+f(y),0);
   function ag(a){const rr=a.filter(x=>x.r!=null),V=sum(a,x=>x.v),K=sum(a,x=>x.k),S=sum(a,x=>x.s);
-  return{n:a.length,S,V,K,av:V/a.length,ak:K/a.length,as:S/a.length,lr:K/V*100,vph:V/(S/3600),rn:rr.length,r:rr.length?sum(rr,x=>x.r)/rr.length:null,best:a.reduce((m,x)=>x.v>m.v?x:m,a[0])}}
+  return{n:a.length,S,V,K,av:V/a.length,ak:K/a.length,as:S/a.length,lr:K/V*100,vph:V/(S/3600),rn:rr.length,r:rr.length?sum(rr,x=>x.r)/rr.length:null,best:a.length?a.reduce((m,x)=>x.v>m.v?x:m,a[0]):{v:0,t:"–",n:0}}
   const rt=x=>x==null?"–":x.toFixed(2);
 
   function getCreatorLinkHtml(c){
